@@ -1,13 +1,13 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/romulofebasi/synapse-releases/main/assets/lil-syn-classic.svg" width="160" alt="Lil Syn — the Synapse mascot" />
+<img src="https://raw.githubusercontent.com/romulofebasi/synapse-releases/main/assets/lil-syn-stack.svg" width="280" alt="Three Lil Syns connected by amber sparks" />
 
 # Synapse — Releases
 
 **Public binaries for [Synapse](https://github.com/romulofebasi/synapse), the second-brain CLI + MCP server.**
 
 [![Latest release](https://img.shields.io/github/v/release/romulofebasi/synapse-releases?label=latest&color=5B3EE0)](https://github.com/romulofebasi/synapse-releases/releases/latest)
-[![Install](https://img.shields.io/badge/install-curl%20%7C%20sh-FFB454.svg?logo=apple)](#install)
+[![Install](https://img.shields.io/badge/install-curl%20%7C%20sh-FFB454.svg)](#install)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 </div>
@@ -96,6 +96,8 @@ The build assets are MIT-licensed (mirroring the source). See [LICENSE](./LICENS
 ---
 
 <div align="center">
+
+<img src="https://raw.githubusercontent.com/romulofebasi/synapse-releases/main/assets/lil-syn-firing.svg" width="100" alt="Lil Syn celebrating with gold sparks" />
 
 <sub>Built with care · Lil Syn approves · <a href="https://github.com/romulofebasi/synapse">source</a></sub>
 
