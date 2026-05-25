@@ -4,23 +4,13 @@
 
 <br/>
 
-**Public binaries for [Synapse](https://github.com/romulofebasi/synapse), the second-brain CLI + MCP server.**
+*Install Synapse — the queryable second brain for AI-augmented developers.*
 
 [![Latest release](https://img.shields.io/github/v/release/romulofebasi/synapse-releases?label=latest&color=5B3EE0)](https://github.com/romulofebasi/synapse-releases/releases/latest)
 [![Install](https://img.shields.io/badge/install-curl%20%7C%20sh-FFB454.svg)](#install)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 </div>
-
----
-
-This repository is the **public mirror** of the Synapse releases.
-
-- The **source code** lives in the private repository [`romulofebasi/synapse`](https://github.com/romulofebasi/synapse).
-- Every tag pushed there triggers a workflow that **copies the cross-compiled binaries here**, so they can be downloaded without GitHub authentication.
-- This split keeps the source private (for now) while letting anyone install the CLI in one command.
-
-There is **no source code in this repository**. Issues and feature requests belong on the source repo (which is currently invite-only — open a discussion if you need access).
 
 ---
 
@@ -32,27 +22,7 @@ There is **no source code in this repository**. Issues and feature requests belo
 curl -fsSL https://raw.githubusercontent.com/romulofebasi/synapse-releases/main/install.sh | sh
 ```
 
-The installer detects your OS and architecture, downloads the right binary, and drops `syn` into `/usr/local/bin/` (override with `INSTALL_DIR=~/.local/bin`).
-
-### Pin a specific version
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/romulofebasi/synapse-releases/main/install.sh | SYNAPSE_VERSION=v0.1.0 sh
-```
-
-### Manual download
-
-Grab the archive for your target from the [latest release](https://github.com/romulofebasi/synapse-releases/releases/latest), extract, and put `syn` (or `syn.exe`) on your `PATH`.
-
-Available targets:
-
-| OS | Architecture | Asset |
-|---|---|---|
-| macOS | Apple Silicon (M1+) | `synapse-<version>-aarch64-apple-darwin.tar.gz` |
-| macOS | Intel | `synapse-<version>-x86_64-apple-darwin.tar.gz` |
-| Linux | x86_64 | `synapse-<version>-x86_64-unknown-linux-gnu.tar.gz` |
-| Linux | ARM64 | `synapse-<version>-aarch64-unknown-linux-gnu.tar.gz` |
-| Windows | x86_64 | `synapse-<version>-x86_64-pc-windows-msvc.zip` |
+The installer detects your OS and CPU, downloads the right binary, drops `syn` into `/usr/local/bin/` (override with `INSTALL_DIR=~/.local/bin`), and clears the macOS Gatekeeper attribute for you.
 
 ### Windows (PowerShell)
 
@@ -65,40 +35,69 @@ Expand-Archive $tmp -DestinationPath $env:TEMP -Force
 Move-Item "$env:TEMP\synapse-$($ver.Substring(1))-x86_64-pc-windows-msvc\syn.exe" "$HOME\bin\syn.exe" -Force
 ```
 
+### Pin a specific version
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/romulofebasi/synapse-releases/main/install.sh | SYNAPSE_VERSION=v0.1.0 sh
+```
+
+### Manual download
+
+Pick your platform from the [latest release](https://github.com/romulofebasi/synapse-releases/releases/latest), extract, and put `syn` (or `syn.exe`) on your `PATH`.
+
+| OS | Architecture | Asset |
+|---|---|---|
+| macOS | Apple Silicon (M1+) | `synapse-<version>-aarch64-apple-darwin.tar.gz` |
+| macOS | Intel | `synapse-<version>-x86_64-apple-darwin.tar.gz` |
+| Linux | x86_64 | `synapse-<version>-x86_64-unknown-linux-gnu.tar.gz` |
+| Linux | ARM64 | `synapse-<version>-aarch64-unknown-linux-gnu.tar.gz` |
+| Windows | x86_64 | `synapse-<version>-x86_64-pc-windows-msvc.zip` |
+
 ---
 
-## Verify
+## First steps
 
-The binaries are **not yet code-signed** (Apple Developer ID / Microsoft Authenticode arrive in v1.0). Until then:
+```bash
+syn init ~/brain
+cd ~/brain
+syn project add "Projeto Alfa"
+syn person  add "Maria Silva" --email maria@empresa.com
+syn search  alfa
+syn mcp     # plug into Claude Code for AI access
+```
 
-- **macOS**: after install, `xattr -dr com.apple.quarantine $(which syn)` to clear the Gatekeeper attribute.
-- **Windows**: SmartScreen prompts once; choose "More info → Run anyway".
+Full documentation, tutorial, MCP wiring and command reference live in the [Synapse docs](https://github.com/romulofebasi/synapse#documentation).
+
+---
+
+## A note on Gatekeeper / SmartScreen
+
+The binaries are not yet code-signed (signing arrives with v1.0). The one-line installer handles macOS for you. If you went the manual route:
+
+- **macOS**: `xattr -dr com.apple.quarantine /usr/local/bin/syn`
+- **Windows**: SmartScreen prompts once on first run → *More info → Run anyway*.
 - **Linux**: nothing special.
 
-You can confirm the build by comparing the SHA-256 against the GitHub release page:
+Optional sanity check before you trust the bytes:
 
 ```bash
 shasum -a 256 ~/Downloads/synapse-0.1.0-*.tar.gz
 ```
 
----
-
-## Where do the binaries come from?
-
-A GitHub Actions workflow in the source repo (`.github/workflows/release.yml`) builds five targets on every `v*.*.*` tag, then a second workflow (`mirror-release.yml`) reuploads them here. No human hands touch the binaries between `cargo build --release` and the asset you download.
+Compare against the value on the release page.
 
 ---
 
 ## License
 
-The build assets are MIT-licensed (mirroring the source). See [LICENSE](./LICENSE).
+MIT — see [LICENSE](./LICENSE).
 
 ---
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/romulofebasi/synapse-releases/main/assets/lil-syn-firing.svg" width="100" alt="Lil Syn celebrating with gold sparks" />
+<img src="https://raw.githubusercontent.com/romulofebasi/synapse-releases/main/assets/lil-syn-firing.svg" width="100" alt="Lil Syn celebrating" />
 
-<sub>Built with care · Lil Syn approves · <a href="https://github.com/romulofebasi/synapse">source</a></sub>
+<sub>Built with care · <a href="https://github.com/romulofebasi/synapse">Synapse on GitHub</a></sub>
 
 </div>
