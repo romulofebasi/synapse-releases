@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/romulofebasi/synapse-releases/main/assets/lil-syn-stack.svg" width="280" alt="Three Lil Syns connected by amber sparks" />
+<img src="https://raw.githubusercontent.com/romulofebasi/synapse-releases/main/assets/wordmark-horizontal.png" width="800" alt="Synapse — second brain · cli + mcp" />
 
-# Synapse — Releases
+<br/>
 
 **Public binaries for [Synapse](https://github.com/romulofebasi/synapse), the second-brain CLI + MCP server.**
 
