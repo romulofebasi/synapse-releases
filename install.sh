@@ -37,7 +37,9 @@ arch=$(uname -m)
 
 case "$os-$arch" in
     darwin-arm64|darwin-aarch64) target=aarch64-apple-darwin ;;
-    darwin-x86_64)               target=x86_64-apple-darwin ;;
+    darwin-x86_64)
+        die "Intel Macs (x86_64) are not supported: Synapse's semantic-search runtime (ONNX Runtime) ships no Intel-macOS build, so there is no binary for this target. Apple Silicon (M1+) only."
+        ;;
     linux-x86_64|linux-amd64)    target=x86_64-unknown-linux-gnu ;;
     linux-arm64|linux-aarch64)   target=aarch64-unknown-linux-gnu ;;
     *)
