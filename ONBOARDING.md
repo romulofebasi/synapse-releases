@@ -83,6 +83,8 @@ fetched once from Hugging Face, then it runs fully offline.
 > Debian 13+, Fedora 39+). On older distros the install still works for
 > the keyword + graph + MCP features; meaning-search needs a newer base.
 
+Full detail on the models, footprint, offline use and privacy: **[MODELS.md](./MODELS.md)**.
+
 ## 5. Hand it to your AI (MCP)
 
 ```bash

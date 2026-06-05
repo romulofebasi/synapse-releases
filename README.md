@@ -58,7 +58,7 @@ Pick your platform from the [latest release](https://github.com/romulofebasi/syn
 
 | | Detail |
 |---|---|
-| **Disk** | ~25 MB binary. Semantic search downloads **~920 MB** of models on first use (once, shared across workspaces) — see [QUICKSTART §4](./QUICKSTART.md#4-search-by-meaning-optional). Without it you still get keyword + graph search and the full MCP server. |
+| **Disk** | ~25 MB binary. Semantic search downloads **~920 MB** of models on first use (once, shared across workspaces) — see [MODELS.md](./MODELS.md). Without it you still get keyword + graph search and the full MCP server. |
 | **Linux** | Semantic search needs **glibc ≥ 2.38** — Ubuntu 24.04+, Debian 13+, Fedora 39+. On older distros `syn` installs and runs (CLI + MCP + keyword/graph search); only meaning-search needs a newer base. |
 | **Network** | Only the one-time model download (from Hugging Face) ever leaves your machine. Your notes, entities and queries stay local — Synapse ships **no telemetry**. |
 
@@ -74,7 +74,30 @@ syn search  alfa
 syn mcp     # expose it to Claude Code
 ```
 
-The five-minute walkthrough — entities, the graph, semantic search, and wiring up your AI with the propose/accept loop — is in **[QUICKSTART.md](./QUICKSTART.md)**.
+The walkthrough — entities, the graph, semantic search, and wiring up your AI with the propose/accept loop — is in **[ONBOARDING.md](./ONBOARDING.md)**.
+
+## Docs
+
+- **[ONBOARDING.md](./ONBOARDING.md)** — from install to your first answer, step by step.
+- **[MODELS.md](./MODELS.md)** — semantic search, the on-device models, footprint, offline use, privacy.
+
+## For your AI assistant
+
+Synapse is built to be driven by an AI over [MCP](https://modelcontextprotocol.io) (`syn mcp`). To teach Claude (or any agent) the **right, token-efficient** way to use it — which read tool to pick, how to route across workspaces, and the rule that the AI only *proposes* writes while you accept them — two machine-oriented files ship here:
+
+- **[`skills/synapse/SKILL.md`](./skills/synapse/SKILL.md)** — a portable [Agent Skill](https://agentskills.io) (the open standard used by Claude Code, the Claude apps/API, and other agents). Install it once:
+
+  ```bash
+  # Claude Code / Claude — personal (all projects):
+  mkdir -p ~/.claude/skills && cp -r skills/synapse ~/.claude/skills/synapse
+  # …or per-project: cp -r skills/synapse .claude/skills/synapse
+  ```
+
+  Claude then loads it automatically when you work with Synapse (or invoke `/synapse-second-brain`).
+
+- **[`LLM.md`](./LLM.md)** — an [`llms.txt`](https://llmstxt.org)-style orientation file. Point any agent at it (or paste it) to give it a concise, accurate picture of Synapse and its MCP tools.
+
+> A `syn` command to install these for you lands in **v0.6**.
 
 ---
 
