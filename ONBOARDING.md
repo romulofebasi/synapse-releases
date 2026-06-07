@@ -19,8 +19,15 @@ You get `projects/`, `people/`, `entities/`, `apis/`, `tasks/`, `notes/`
 and a disposable `.synapse/` index (delete it, run `syn reindex`, you're
 back).
 
-On a fresh, interactive run, `syn init` asks one question — whether to
-download the semantic-search models (~920 MB, one-time):
+On a fresh, interactive machine `syn init` first runs a short **guided
+setup** (v0.6): locale, output format, then your profile — name,
+birthdate, profession, employers. That profile is captured once and
+seeded into this (and every) workspace as your `self` person, which
+powers `syn cv export` and helps your AI route work to you. In CI or a
+pipe it stays silent and skips the prompts.
+
+Then `syn init` asks whether to download the semantic-search models
+(~920 MB, one-time):
 
 ```
 Download the models now? [Y/n]

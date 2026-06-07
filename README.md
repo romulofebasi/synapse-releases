@@ -14,6 +14,15 @@
 
 ---
 
+## What's new in v0.6.0 — Personal onboarding & autonomy
+
+- **Knows its owner.** Guided `syn setup` captures your profile (name, birthdate, profession, employers) once, and `syn init` seeds a canonical `self` person into every workspace — powering `syn cv export` and richer AI routing. Non-interactive installs stay zero-config.
+- **A modern, AI-native CLI.** Rich by default on a terminal — unicode tables, entity panels, a graph tree, progress spinners, and the graph-constellation mascot — with `--plain`/`--no-color`/`--quiet` opt-outs. Piped/`--format json` output is unchanged.
+- **Built to be driven by agents.** **19 MCP tools** now (digest, audit delta, batch read with field projection, batch propose). Every read returns a uniform `{result, freshness?}` structured result with an `outputSchema` and clickable resource links. New `syn skill install` / `syn agents init` / `syn plugin install` set up Claude Code in one command.
+- **`--format json` everywhere**, machine-readable errors, and `--no-input` for CI/agents.
+
+---
+
 ## Install
 
 ### One-liner (macOS, Linux)
@@ -22,12 +31,12 @@
 curl -fsSL https://raw.githubusercontent.com/romulofebasi/synapse-releases/main/install.sh | sh
 ```
 
-Detects your OS and CPU, downloads the right binary, drops `syn` into `/usr/local/bin/` (override with `INSTALL_DIR=~/.local/bin`), and clears the macOS Gatekeeper attribute for you. Pin a version with `SYNAPSE_VERSION=v0.5.0`.
+Detects your OS and CPU, downloads the right binary, drops `syn` into `/usr/local/bin/` (override with `INSTALL_DIR=~/.local/bin`), and clears the macOS Gatekeeper attribute for you. Pin a version with `SYNAPSE_VERSION=v0.6.0`.
 
 ### Windows (PowerShell)
 
 ```powershell
-$ver = "v0.5.0"   # latest tag from the releases page
+$ver = "v0.6.0"   # latest tag from the releases page
 $url = "https://github.com/romulofebasi/synapse-releases/releases/download/$ver/synapse-$($ver.Substring(1))-x86_64-pc-windows-msvc.zip"
 $tmp = "$env:TEMP\synapse.zip"
 Invoke-WebRequest $url -OutFile $tmp
@@ -97,7 +106,13 @@ Synapse is built to be driven by an AI over [MCP](https://modelcontextprotocol.i
 
 - **[`LLM.md`](./LLM.md)** — an [`llms.txt`](https://llmstxt.org)-style orientation file. Point any agent at it (or paste it) to give it a concise, accurate picture of Synapse and its MCP tools.
 
-> A `syn` command to install these for you lands in **v0.6**.
+> As of **v0.6**, the binary installs these for you — no copying needed:
+>
+> ```bash
+> syn skill install     # → ~/.claude/skills/synapse-second-brain/SKILL.md
+> syn agents init       # → ./llms.txt
+> syn plugin install    # scaffold a full Claude Code plugin (skill + MCP + hooks)
+> ```
 
 ---
 
