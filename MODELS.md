@@ -18,10 +18,14 @@ Two on-device models, run on CPU (no GPU, no Python):
 
 | Job | Default model | Size | Languages |
 |---|---|---|---|
-| Embeddings | BGE-M3 | ~570 MB | multilingual (en, pt, es, fr, de, …) |
+| Embeddings | BGE-M3 (fp32) | ~2.2 GB | multilingual (en, pt, es, fr, de, …) |
 | NER (entity discovery) | GLiNER-multi | ~350 MB | multilingual |
 
-**~920 MB total**, downloaded **once** and shared across every workspace on the machine. Lighter English-only models (~100 MB total) are available — set them in `.synapse/config.toml`.
+**~2.5 GB total**, downloaded **once** and shared across every workspace on the machine (measured; corrected from an earlier ~920 MB estimate).
+
+**Quality vs speed (v0.7).** The guided `syn init` asks which embedding profile you want — `bge-m3` fp32 (above, max recall, the default) or `bge-m3-int8` (~560 MB, lighter & faster, small recall cost; **~900 MB total** with the NER model). Both are 1024-dim — the same vector space — so switching is just a re-embed.
+
+**Lighter English-only opt-downs (~325 MB total):** `bge-small-en-v1.5-q` (~65 MB) + `gliner-base-en` (~260 MB). Set them in `.synapse/config.toml` (`[enrichment]`).
 
 ## Downloading — on your consent, never silently
 

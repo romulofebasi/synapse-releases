@@ -41,6 +41,7 @@ Search hits and `get_entity` attach `resource_link`s to
 | One known entity's full content | `get_entity {type, id}` | `{markdown}`. The cheapest read for a known id — don't search for it. |
 | Several known entities, only some fields | `get_entities {items:[{type,id,fields?}]}` | one call, optional per-item field projection (e.g. `fields:["title","status"]`) instead of full markdown. Per-item `error` on a bad id. |
 | A compact inventory of a type | `list_by_type {type, status?, limit?, cursor?}` | array of `{type,id,title,status,owner,path}`; a full page (`len==limit`) means more — paginate with `cursor`. |
+| Counts/totals without paging | `query {group_by, filter?, limit?}` | read-only aggregation: `{group_by, buckets:[{value,count}], total}`. `group_by` ∈ type\|status\|owner\|priority\|due\|tag. Use instead of listing everything just to count. |
 | Relationships | `project_graph {type, id, rel?}` | inbound + outbound neighbours. |
 | What changed since I last looked | `recent_changes {since, limit?}` | audit decisions at/after an RFC-3339 instant, newest first. Resume context with a delta, don't re-read. |
 
@@ -56,7 +57,7 @@ read in full. Don't pull every entity to find one.
   when models aren't downloaded.
 
 If meaning-match comes back empty, the models may be absent — suggest
-`syn embed --all` (one-time ~920 MB, on the user's consent) or use `no-vector`.
+`syn embed --all` (one-time ~2.5 GB, on the user's consent) or use `no-vector`.
 
 ## Federation (opt-in only, BR-12.4)
 

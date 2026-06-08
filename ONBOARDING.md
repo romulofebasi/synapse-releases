@@ -27,11 +27,16 @@ powers `syn cv export` and helps your AI route work to you. In CI or a
 pipe it stays silent and skips the prompts.
 
 Then `syn init` asks whether to download the semantic-search models
-(~920 MB, one-time):
+(one-time):
 
 ```
 Download the models now? [Y/n]
 ```
+
+If you say yes, it asks which **embedding profile** you want — **Quality**
+(BGE-M3 fp32, ~2.5 GB total, maximum recall, the recommended default) or
+**Speed** (BGE-M3 int8, ~900 MB total, lighter & faster, small recall cost).
+Both are multilingual and the same vector space, so you can switch later.
 
 Say **yes** for meaning-search ([§4](#4-search-by-meaning-optional)), or
 skip it — everything else works either way, and you can enable it later
@@ -69,7 +74,7 @@ NER + hybrid search). It is **opt-out** and pulls no data anywhere — but
 its models are **downloaded only with your consent**. Turn it on once:
 
 ```bash
-syn embed --all     # first run downloads ~920 MB of models, then embeds everything
+syn embed --all     # first run downloads ~2.5 GB of models, then embeds everything
 syn embed --check   # … models_ready: true
 ```
 

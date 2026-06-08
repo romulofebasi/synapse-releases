@@ -14,12 +14,13 @@
 
 ---
 
-## What's new in v0.6.0 — Personal onboarding & autonomy
+## What's new in v0.7.0 — Governed-autonomy foundation
 
-- **Knows its owner.** Guided `syn setup` captures your profile (name, birthdate, profession, employers) once, and `syn init` seeds a canonical `self` person into every workspace — powering `syn cv export` and richer AI routing. Non-interactive installs stay zero-config.
-- **A modern, AI-native CLI.** Rich by default on a terminal — unicode tables, entity panels, a graph tree, progress spinners, and the graph-constellation mascot — with `--plain`/`--no-color`/`--quiet` opt-outs. Piped/`--format json` output is unchanged.
-- **Built to be driven by agents.** **19 MCP tools** now (digest, audit delta, batch read with field projection, batch propose). Every read returns a uniform `{result, freshness?}` structured result with an `outputSchema` and clickable resource links. New `syn skill install` / `syn agents init` / `syn plugin install` set up Claude Code in one command.
-- **`--format json` everywhere**, machine-readable errors, and `--no-input` for CI/agents.
+- **Governed autonomy.** A new write policy (`[proposals] auto_apply`) evolves the propose/accept gate. By default (`manual`) every AI write still queues for `syn pending accept` — the invariant is intact. Opt into `safe` and **low-risk, reversible** writes (linking two entities that already exist) apply on their own, stamped on the audit trail as `auto-accepted`. Underneath: AI batches are now **atomic** (all-or-nothing) and a single accept is **crash-safe** (never "applied but still pending").
+- **Faster on big vaults.** `syn reindex` is now **incremental** — it only re-parses files that changed (and reconciles deletions), instead of rescanning the whole workspace. `syn reindex --full` forces a clean rebuild.
+- **Choose quality or speed.** Guided `syn init` lets you pick the embedding profile: **BGE-M3 fp32** (~2.5 GB, maximum recall — the recommended default) or **int8** (~900 MB total, lighter & faster, small recall cost). Same 1024-dim space, so switching is just a re-embed.
+- **One more agent tool — 20 MCP tools.** New read-only **`query`** aggregates counts (by type/status/owner/priority/due/tag, optionally filtered) **out of context** — and takes **no SQL**, so it can never read internal tables. `replay_proposal` is now **client-driven**: the server returns replay material the agent re-runs (no server-side sampling).
+- **Honest footprint.** The on-device models are **~2.5 GB** (fp32 default) — measured and corrected from the earlier ~920 MB figure; see [MODELS.md](./MODELS.md).
 
 ---
 
@@ -31,12 +32,12 @@
 curl -fsSL https://raw.githubusercontent.com/romulofebasi/synapse-releases/main/install.sh | sh
 ```
 
-Detects your OS and CPU, downloads the right binary, drops `syn` into `/usr/local/bin/` (override with `INSTALL_DIR=~/.local/bin`), and clears the macOS Gatekeeper attribute for you. Pin a version with `SYNAPSE_VERSION=v0.6.0`.
+Detects your OS and CPU, downloads the right binary, drops `syn` into `/usr/local/bin/` (override with `INSTALL_DIR=~/.local/bin`), and clears the macOS Gatekeeper attribute for you. Pin a version with `SYNAPSE_VERSION=v0.7.0`.
 
 ### Windows (PowerShell)
 
 ```powershell
-$ver = "v0.6.0"   # latest tag from the releases page
+$ver = "v0.7.0"   # latest tag from the releases page
 $url = "https://github.com/romulofebasi/synapse-releases/releases/download/$ver/synapse-$($ver.Substring(1))-x86_64-pc-windows-msvc.zip"
 $tmp = "$env:TEMP\synapse.zip"
 Invoke-WebRequest $url -OutFile $tmp
@@ -67,7 +68,7 @@ Pick your platform from the [latest release](https://github.com/romulofebasi/syn
 
 | | Detail |
 |---|---|
-| **Disk** | ~25 MB binary. Semantic search downloads **~920 MB** of models on first use (once, shared across workspaces) — see [MODELS.md](./MODELS.md). Without it you still get keyword + graph search and the full MCP server. |
+| **Disk** | ~25 MB binary. Semantic search downloads **~2.5 GB** of models on first use (once, shared across workspaces) — see [MODELS.md](./MODELS.md). Without it you still get keyword + graph search and the full MCP server. |
 | **Linux** | Semantic search needs **glibc ≥ 2.38** — Ubuntu 24.04+, Debian 13+, Fedora 39+. On older distros `syn` installs and runs (CLI + MCP + keyword/graph search); only meaning-search needs a newer base. |
 | **Network** | Only the one-time model download (from Hugging Face) ever leaves your machine. Your notes, entities and queries stay local — Synapse ships **no telemetry**. |
 

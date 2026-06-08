@@ -13,7 +13,7 @@ Over MCP the assistant **never writes directly**. Write tools enqueue a
 write succeeded — surface the pending id and the accept command. Never edit
 Markdown or `.synapse/` by hand; that bypasses provenance and the audit trail.
 
-## MCP tools (19)
+## MCP tools (20)
 
 Every read returns `{ "result": …, "freshness"? }` as `structuredContent`
 (read that field; the text mirror is compact JSON). Search hits and
@@ -25,7 +25,9 @@ Read (local): `workspace_overview {recent?}` (counts + recent — orient here) �
 `get_entities {items:[{type,id,fields?}]}` (batch + field projection) ·
 `list_by_type {type,status?,limit?,cursor?}` (paginated) ·
 `project_graph {type,id,rel?}` (neighbours) ·
-`recent_changes {since,limit?}` (audit delta, newest first).
+`recent_changes {since,limit?}` (audit delta, newest first) ·
+`query {group_by,filter?,limit?}` (read-only aggregation — counts by
+type|status|owner|priority|due|tag without paging; no SQL, ADR-023).
 Federation (opt-in): `list_workspaces` · `federated_search {query,workspaces?}`
 (keyword, not semantic) · `get_entity_from` · `get_workspace_manifest`.
 Maintenance: `reindex`. Audit: `replay_proposal`.
