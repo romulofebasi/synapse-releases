@@ -48,7 +48,8 @@ Search hits and `get_entity` attach `resource_link`s to
 | You want… | Use | Returns |
 |---|---|---|
 | Orient in one call | `workspace_overview {recent?}` | per-type counts, total, most-recently-updated entities. Start here. |
-| Find by topic/keyword/meaning | `search_knowledge {query, type?, tag?, owner?, limit?, mode?}` | array of `{type, id, title, snippet, matched_by?, relevance?}` — a **snippet**, not the body. `matched_by` names the legs that surfaced it (fts/vector/graph) and `relevance` is a `strong`\|`good`\|`partial` band — use them to judge if a hit is on-topic before spending tokens on `get_entity`. |
+| What needs attention | `workspace_health {days?}` | recent activity + hygiene (pending reviews, orphans, dangling, untagged) + a `next_steps` list, each with the exact `syn` command to hand the human. |
+| Find by topic/keyword/meaning | `search_knowledge {query, type?, tag?, owner?, limit?, mode?}` | array of `{type, id, title, snippet, matched_by?, relevance?, compatibility?}` — a **snippet**, not the body. `matched_by` names the legs that surfaced it (fts/vector/graph), `relevance` is a `strong`\|`good`\|`partial` band, and `compatibility` is a bounded `[0,1]` score (leg agreement + rank position) — use them to judge if a hit is on-topic before spending tokens on `get_entity`. The independent legs run in parallel; the fused order is deterministic. |
 | Find across **every** kind (incl. custom) | `search_everything {query, ...}` | same hybrid retrieval, no type filter — reach for it when custom types may be involved. |
 | One known entity's full content | `get_entity {type, id}` | `{markdown}`. The cheapest read for a known id — don't search for it. |
 | Provenance + trust of a fact | `blame {type, id}` | lineage + a deterministic trust band; low/stale → consider proposing an update. |
@@ -59,6 +60,11 @@ Search hits and `get_entity` attach `resource_link`s to
 | Counts/totals without paging | `query {group_by, filter?, limit?}` | read-only aggregation: `{group_by, buckets:[{value,count}], total}`. `group_by` ∈ type\|status\|owner\|priority\|due\|tag. Use instead of listing everything just to count. |
 | Relationships | `project_graph {type, id, rel?}` | inbound + outbound neighbours. |
 | What changed since I last looked | `recent_changes {since, limit?}` | audit decisions at/after an RFC-3339 instant, newest first. Resume context with a delta, don't re-read. |
+
+**Discover the vocabulary before proposing.** Read the `synapse://capabilities`
+resource (or run `syn context`) to learn the registered entity types + their
+fields, the link relations, the reserved `x-*` keys, and each write-proposal's
+payload shape — so you never propose an invalid kind, relation, or key.
 
 **Snippet → get_entity pattern (saves tokens):** triage on titles/snippets from
 `search_knowledge`, then `get_entity`/`get_entities` only the handful you must

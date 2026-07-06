@@ -14,17 +14,22 @@ Over MCP the assistant **never writes directly**. Write tools enqueue a
 write succeeded — surface the pending id and the accept command. Never edit
 Markdown or `.synapse/` by hand; that bypasses provenance and the audit trail.
 
-## MCP tools (24)
+## MCP tools (25)
 
 Every read returns `{ "result": …, "freshness"? }` as `structuredContent`
 (read that field; the text mirror is compact JSON). Search hits and
 `get_entity` attach `resource_link`s — `resources/read` a hit directly. Every
 tool carries MCP annotations (reads are `readOnlyHint`; writes are additive, not
-destructive); a client can auto-allow reads and gate writes.
+destructive); a client can auto-allow reads and gate writes. High-value reads
+also attach a deterministic `_meta` sidecar (SYN-308): `workspace`, a `precision`
+band count for searches, and a `next_step` — read it to judge if results are
+on-topic before spending tokens. Recoverable errors come back as `invalid_params`
+with a `data.remediation` naming the exact fix (SYN-309); retry on that, don't give up.
 
 Read (local): `workspace_overview {recent?}` (counts + recent — orient here) ·
-`search_knowledge {query,type?,tag?,owner?,limit?,mode?}` → `{type,id,title,snippet,matched_by?,relevance?}[]`
-(mode = hybrid|semantic|no-vector; `matched_by` = which legs surfaced it — fts/vector/graph — and `relevance` = strong|good|partial band) ·
+`workspace_health {days?}` (activity + hygiene + a `next_steps` list with the exact `syn` command to hand the human — surface what needs attention) ·
+`search_knowledge {query,type?,tag?,owner?,limit?,mode?}` → `{type,id,title,snippet,matched_by?,relevance?,compatibility?}[]`
+(mode = hybrid|semantic|no-vector; `matched_by` = which legs surfaced it — fts/vector/graph; `relevance` = strong|good|partial band; `compatibility` = bounded [0,1] score from leg agreement + rank position. Legs run in parallel; fused order deterministic) ·
 `search_everything {query,...}` (same hybrid retrieval across **every** kind, built-in and custom — no type filter) ·
 `get_entity {type,id}` → `{markdown}` ·
 `get_entities {items:[{type,id,fields?}]}` (batch + field projection) ·
@@ -38,6 +43,9 @@ type|status|owner|priority|due|tag without paging; no SQL, ADR-023).
 Federation (opt-in): `list_workspaces` · `federated_search {query,workspaces?}`
 (keyword, not semantic) · `get_entity_from` · `get_workspace_manifest`.
 Maintenance: `reindex {full?,relink?}`. Audit: `replay_proposal` (client-driven).
+Resource: read `synapse://capabilities` (or run `syn context`) for the workspace
+vocabulary — entity types + fields, link relations, reserved `x-*` keys, proposal
+payload shapes, enrichment sources — to avoid proposing an invalid kind/rel/key.
 Write proposals (enqueue, never apply): `capture_fact`, `link_entity`,
 `update_status`, `add_workspace_topic`, `add_workspace_tag`, and
 `propose_batch {proposals:[{kind,payload}]}` — bundle many into one accept.
