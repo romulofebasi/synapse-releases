@@ -79,6 +79,14 @@ unrelated notes pile into the same workspace.
 <img src="assets/brand/noise-resilience.png" width="820" alt="Retrieval under noise: recall at 10 holds at 1.0 as distractors scale to 8000, while a naive expectation would decline." />
 </div>
 
+It also stays sharp at the top of the list. As six professionals' full quarters pile into one
+workspace, the right fact is answer number one 85 percent of the time (up from 78 percent
+before passage-level embeddings) and is in the top ten on every tier.
+
+<div align="center">
+<img src="assets/brand/retrieval-quality.png" width="820" alt="Retrieval quality as the workspace grows: recall at 1 rises to 0.85 with passage chunking, up from 0.78, and recall at 10 holds at 1.0 across 463 mixed entities." />
+</div>
+
 New to these terms? The [**plain-language guide**](BENCHMARKS_EXPLAINED.md) explains e2e, the
 gate, recall@10, distractors, and where the benchmark is honestly weak, in English and
 Portuguese.
