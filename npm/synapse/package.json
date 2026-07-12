@@ -1,0 +1,39 @@
+{
+  "name": "@febasi/synapse",
+  "version": "0.0.0",
+  "description": "Governed, local-first memory for AI agents. A Markdown knowledge graph your agents can read and propose changes to, but never silently corrupt. Ships the syn CLI and MCP server.",
+  "keywords": [
+    "ai",
+    "agent",
+    "memory",
+    "mcp",
+    "knowledge-graph",
+    "second-brain",
+    "cli"
+  ],
+  "homepage": "https://github.com/romulofebasi/synapse-releases",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/romulofebasi/synapse-releases.git"
+  },
+  "bugs": {
+    "url": "https://github.com/romulofebasi/synapse-releases/issues"
+  },
+  "license": "MIT",
+  "bin": {
+    "syn": "bin/syn.js"
+  },
+  "files": [
+    "bin/syn.js",
+    "README.md"
+  ],
+  "optionalDependencies": {
+    "@febasi/synapse-darwin-arm64": "0.0.0",
+    "@febasi/synapse-linux-x64": "0.0.0",
+    "@febasi/synapse-linux-arm64": "0.0.0",
+    "@febasi/synapse-win32-x64": "0.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

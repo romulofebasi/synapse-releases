@@ -1,0 +1,104 @@
+name: npm publish
+
+# Publish @febasi/synapse (a launcher) + its 4 per-platform binary packages to
+# npm from THIS public mirror, using npm trusted publishing (OIDC). No
+# long-lived token, and because this repo is public npm generates provenance
+# attestations automatically. Runs after a release is mirrored here (the
+# mirror-release job in the source repo creates the release with a PAT, so the
+# `release: published` event fires), or on demand.
+#
+# Owner setup (one time): on npmjs.com, add a Trusted Publisher to EACH of the
+# five packages (@febasi/synapse and @febasi/synapse-{darwin-arm64,linux-x64,
+# linux-arm64,win32-x64}) pointing at repository romulofebasi/synapse-releases
+# and workflow npm-publish.yml. Trusted publishing requires npm >= 11.5.1,
+# Node >= 22.14, and GitHub-hosted runners.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to publish (e.g. v1.4.0)"
+        required: true
+
+permissions:
+  contents: read
+  id-token: write     # OIDC trusted publishing (+ automatic provenance)
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: ensure npm supports trusted publishing
+        run: |
+          npm install -g npm@latest
+          npm --version
+
+      - name: resolve tag
+        id: v
+        env:
+          TAG: ${{ github.event.release.tag_name || github.event.inputs.tag }}
+        run: |
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+
+      - name: download release archives
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download "${{ steps.v.outputs.tag }}" --repo "${{ github.repository }}" \
+            --pattern '*.tar.gz' --pattern '*.zip' --dir dl --clobber
+
+      - name: assemble + publish (OIDC)
+        run: |
+          set -euo pipefail
+          version="${{ steps.v.outputs.version }}"
+
+          # Already-published versions are immutable — skip so re-runs are safe.
+          exists() { npm view "$1@$2" version >/dev/null 2>&1; }
+
+          publish_platform() {
+            os="$1"; cpu="$2"; archive="$3"; binfile="$4"
+            name="@febasi/synapse-${os}-${cpu}"
+            if exists "$name" "$version"; then echo "skip ${name}@${version} (exists)"; return; fi
+            rm -rf ex pkg && mkdir -p ex pkg
+            if [[ "$archive" == *.zip ]]; then unzip -q "dl/$archive" -d ex; else tar -xzf "dl/$archive" -C ex; fi
+            cp "$(find ex -type f -name "$binfile" | head -1)" "pkg/$binfile"
+            chmod +x "pkg/$binfile" || true
+            cat > pkg/package.json <<EOF
+          {
+            "name": "${name}",
+            "version": "${version}",
+            "description": "Prebuilt syn binary for ${os}-${cpu}. Companion to @febasi/synapse.",
+            "license": "MIT",
+            "os": ["${os}"],
+            "cpu": ["${cpu}"],
+            "files": ["${binfile}"],
+            "homepage": "https://github.com/${GITHUB_REPOSITORY}",
+            "repository": { "type": "git", "url": "git+https://github.com/${GITHUB_REPOSITORY}.git" }
+          }
+          EOF
+            ( cd pkg && npm publish --provenance --access public )
+          }
+
+          publish_platform darwin arm64 "synapse-${version}-aarch64-apple-darwin.tar.gz"     syn
+          publish_platform linux  x64   "synapse-${version}-x86_64-unknown-linux-gnu.tar.gz" syn
+          publish_platform linux  arm64 "synapse-${version}-aarch64-unknown-linux-gnu.tar.gz" syn
+          publish_platform win32  x64   "synapse-${version}-x86_64-pc-windows-msvc.zip"       syn.exe
+
+          # Launcher: pin its version + the optionalDependency versions, then publish.
+          if exists "@febasi/synapse" "$version"; then
+            echo "skip @febasi/synapse@${version} (exists)"
+          else
+            cd npm/synapse
+            npm version "$version" --no-git-tag-version --allow-same-version
+            node -e "const f='package.json',p=require('./'+f);for(const k in p.optionalDependencies)p.optionalDependencies[k]='${version}';require('fs').writeFileSync(f,JSON.stringify(p,null,2))"
+            npm publish --provenance --access public
+          fi
