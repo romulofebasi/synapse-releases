@@ -27,9 +27,8 @@ installs only the one that matches your operating system and CPU. There is no
 download at runtime and nothing is fetched from the network when you run `syn`.
 
 Supported targets are `darwin-arm64` (Apple Silicon), `linux-x64`, `linux-arm64`,
-and `win32-x64`. On any other platform, install a signed archive from the
-[releases page](https://github.com/romulofebasi/synapse-releases/releases) or use
-Homebrew (`brew install romulofebasi/synapse/synapse`).
+and `win32-x64`. On any other platform, download a signed archive from the
+[releases page](https://github.com/romulofebasi/synapse-releases/releases).
 
 ## Trust
 

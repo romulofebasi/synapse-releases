@@ -33,8 +33,8 @@ function fail(msg) {
   process.stderr.write(`synapse: ${msg}\n`);
   process.stderr.write(
     'Prebuilt targets are darwin-arm64, linux-x64, linux-arm64, and win32-x64.\n' +
-      'You can also install from https://github.com/romulofebasi/synapse-releases/releases, ' +
-      'or with Homebrew: brew install romulofebasi/synapse/synapse\n',
+      'On other platforms, download a signed archive from ' +
+      'https://github.com/romulofebasi/synapse-releases/releases\n',
   );
   process.exit(1);
 }
