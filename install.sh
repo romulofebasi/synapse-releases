@@ -83,7 +83,7 @@ curl -fsSL "$url" -o "$tmpdir/$asset" \
 # ----- verify integrity -----------------------------------------------------
 # Release archives ship a SHA256SUMS manifest signed with keyless
 # Sigstore/cosign. We always check the checksum; if `cosign` is installed we
-# also verify the signature. Full manual steps: docs/VERIFYING-RELEASES.md.
+# also verify the signature. Full manual steps: VERIFYING-RELEASES.md.
 
 sums_url="https://github.com/$repo/releases/download/$tag/SHA256SUMS"
 if curl -fsSL "$sums_url" -o "$tmpdir/SHA256SUMS" 2>/dev/null; then

@@ -21,7 +21,7 @@ data, the MCP server surface, the install script, and the npm launcher.
 
 Release archives are signed with keyless Sigstore/cosign and npm builds carry
 provenance, so you can verify that a build came from this project before you run
-it. See [VERIFYING-RELEASES](https://github.com/romulofebasi/synapse-releases/releases).
+it. See [VERIFYING-RELEASES.md](../VERIFYING-RELEASES.md).
 
 ## Supported versions
 

@@ -265,6 +265,7 @@ Full walkthrough in [VERIFYING-RELEASES.md](./VERIFYING-RELEASES.md).
 | [ONBOARDING.md](./ONBOARDING.md) | From install to your first answer, step by step |
 | [MODELS.md](./MODELS.md) | Semantic search, the on-device models, footprint, offline use, privacy |
 | [BENCHMARKS_EXPLAINED.md](./BENCHMARKS_EXPLAINED.md) | The benchmark in plain language, English and Portuguese |
+| [VERIFYING-RELEASES.md](./VERIFYING-RELEASES.md) | Prove a download is signed and untampered (cosign, provenance) |
 | [LLM.md](./LLM.md) | The agent-facing orientation file |
 
 ---
