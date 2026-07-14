@@ -125,9 +125,10 @@ npx @febasi/synapse init ~/brain      # run once, no install
 npm install -g @febasi/synapse        # or install syn globally
 ```
 
-The launcher pulls the signed binary for your platform on first run. Published from the public
-mirror with [npm provenance](https://docs.npmjs.com/generating-provenance-statements), so the
-link back to this repo's build is verifiable on the package page.
+npm installs the prebuilt binary for your platform as a package (no runtime download).
+Published from the public mirror with
+[npm provenance](https://docs.npmjs.com/generating-provenance-statements), so the link back to
+this repo's build is verifiable on the package page.
 
 ### One-liner (macOS, Linux)
 
@@ -265,6 +266,18 @@ Full walkthrough in [VERIFYING-RELEASES.md](./VERIFYING-RELEASES.md).
 | [MODELS.md](./MODELS.md) | Semantic search, the on-device models, footprint, offline use, privacy |
 | [BENCHMARKS_EXPLAINED.md](./BENCHMARKS_EXPLAINED.md) | The benchmark in plain language, English and Portuguese |
 | [LLM.md](./LLM.md) | The agent-facing orientation file |
+
+---
+
+## Contributing and feedback
+
+Synapse is a closed-source product distributed through this public mirror. Bugs, ideas, and
+questions are very welcome.
+
+- **Found a bug?** [Open a bug report](https://github.com/romulofebasi/synapse-releases/issues/new?template=bug_report.yml).
+- **Want a feature, or have an idea?** [Open a feature request](https://github.com/romulofebasi/synapse-releases/issues/new?template=feature_request.yml).
+- **Docs or install script fix?** Those files live in this public repo and take pull requests. See [CONTRIBUTING.md](./CONTRIBUTING.md).
+- **Security issue?** Please disclose it privately. See [SECURITY.md](./.github/SECURITY.md).
 
 ---
 

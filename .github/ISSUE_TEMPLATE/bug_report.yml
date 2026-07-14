@@ -1,0 +1,65 @@
+name: Bug report
+description: Something in syn, the MCP server, or the install path is not working
+title: "[bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. The product source is private, so the more detail
+        you give here, the faster we can reproduce. Please do not paste secrets
+        or private workspace content.
+  - type: input
+    id: version
+    attributes:
+      label: Synapse version
+      description: Output of `syn --version`.
+      placeholder: "syn 1.4.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How did you install it?
+      options:
+        - npm (@febasi/synapse)
+        - install.sh (curl | sh)
+        - manual archive from Releases
+        - other
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS and CPU
+      placeholder: "macOS 15 / Apple Silicon, or Ubuntu 24.04 / x86_64"
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: The commands you ran, in order.
+      render: shell
+  - type: textarea
+    id: doctor
+    attributes:
+      label: syn doctor output
+      description: Paste the output of `syn doctor`, redacting anything private.
+      render: shell
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you file
+      options:
+        - label: I searched existing issues and did not find a duplicate
+          required: true
+        - label: I reproduced this on the latest release
+          required: true

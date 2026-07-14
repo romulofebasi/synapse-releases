@@ -61,7 +61,7 @@ jobs:
           set -euo pipefail
           version="${{ steps.v.outputs.version }}"
 
-          # Already-published versions are immutable — skip so re-runs are safe.
+          # Already-published versions are immutable, so skip to keep re-runs safe.
           exists() { npm view "$1@$2" version >/dev/null 2>&1; }
 
           publish_platform() {

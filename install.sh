@@ -3,8 +3,13 @@
 # https://github.com/romulofebasi/synapse-releases
 #
 # Detects OS + architecture, downloads the matching release tarball
-# from the public release mirror, and drops `syn` into INSTALL_DIR
-# (defaults to /usr/local/bin).
+# from the public release mirror, verifies it, and drops `syn` into
+# INSTALL_DIR (defaults to /usr/local/bin).
+#
+# The simplest install is npm (any platform with Node 18+):
+#   npx @febasi/synapse --help      # run once, no install
+#   npm install -g @febasi/synapse  # global `syn`
+# This script is the standalone alternative for systems without Node.
 #
 # Usage:
 #   curl -fsSL https://raw.githubusercontent.com/romulofebasi/synapse-releases/main/install.sh | sh
@@ -43,7 +48,7 @@ case "$os-$arch" in
     linux-x86_64|linux-amd64)    target=x86_64-unknown-linux-gnu ;;
     linux-arm64|linux-aarch64)   target=aarch64-unknown-linux-gnu ;;
     *)
-        die "no prebuilt binary for $os-$arch — build from source: https://github.com/romulofebasi/synapse"
+        die "no prebuilt binary for $os-$arch; try npm (npx @febasi/synapse) or contact support"
         ;;
 esac
 
@@ -74,6 +79,49 @@ trap 'rm -rf "$tmpdir"' EXIT
 say "downloading $asset"
 curl -fsSL "$url" -o "$tmpdir/$asset" \
     || die "download failed: $url (check that $tag exists)"
+
+# ----- verify integrity -----------------------------------------------------
+# Release archives ship a SHA256SUMS manifest signed with keyless
+# Sigstore/cosign. We always check the checksum; if `cosign` is installed we
+# also verify the signature. Full manual steps: docs/VERIFYING-RELEASES.md.
+
+sums_url="https://github.com/$repo/releases/download/$tag/SHA256SUMS"
+if curl -fsSL "$sums_url" -o "$tmpdir/SHA256SUMS" 2>/dev/null; then
+    expected=$(sed -n "s/^\([0-9a-f]\{64\}\)[[:space:]]*[*]\{0,1\}$asset\$/\1/p" \
+        "$tmpdir/SHA256SUMS" | head -n1)
+    if [ -n "$expected" ]; then
+        if command -v sha256sum >/dev/null 2>&1; then
+            actual=$(sha256sum "$tmpdir/$asset" | cut -d' ' -f1)
+        elif command -v shasum >/dev/null 2>&1; then
+            actual=$(shasum -a 256 "$tmpdir/$asset" | cut -d' ' -f1)
+        else
+            actual=""
+        fi
+        if [ -n "$actual" ]; then
+            [ "$actual" = "$expected" ] \
+                || die "checksum mismatch for $asset (expected $expected, got $actual)"
+            say "checksum verified"
+        fi
+    fi
+    if command -v cosign >/dev/null 2>&1; then
+        bundle_url="https://github.com/$repo/releases/download/$tag/SHA256SUMS.cosign.bundle"
+        if curl -fsSL "$bundle_url" -o "$tmpdir/SHA256SUMS.cosign.bundle" 2>/dev/null; then
+            if cosign verify-blob \
+                --bundle "$tmpdir/SHA256SUMS.cosign.bundle" \
+                --certificate-identity-regexp '^https://github.com/romulofebasi/synapse/\.github/workflows/release\.yml@refs/tags/v' \
+                --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
+                "$tmpdir/SHA256SUMS" >/dev/null 2>&1; then
+                say "cosign signature verified"
+            else
+                say "warning: cosign signature check failed; proceeding on checksum only"
+            fi
+        fi
+    else
+        say "tip: install cosign to also verify the release signature"
+    fi
+else
+    say "warning: no SHA256SUMS for $tag; skipping checksum verification"
+fi
 
 say "unpacking"
 tar -xzf "$tmpdir/$asset" -C "$tmpdir"
