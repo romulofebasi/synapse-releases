@@ -9,7 +9,10 @@
 Git-native memory for AI agents. Traceable, reversible, and provable by construction.
 
 [![Latest release](https://img.shields.io/github/v/release/romulofebasi/synapse-releases?label=release&color=5B3EE0)](https://github.com/romulofebasi/synapse-releases/releases/latest)
+[![npm](https://img.shields.io/npm/v/@febasi/synapse?logo=npm&color=CB3837&label=npm)](https://www.npmjs.com/package/@febasi/synapse)
 [![MCP](https://img.shields.io/badge/MCP-rmcp%201.7-7A4FFF.svg)](https://modelcontextprotocol.io)
+[![Signed releases](https://img.shields.io/badge/releases-cosign%20signed-5B3EE0?logo=sigstore&logoColor=white)](#verify-your-download)
+[![No telemetry](https://img.shields.io/badge/telemetry-none-16A34A.svg)](#requirements)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 **[Install](#install)** · **[Why it matters](#why-it-matters)** · **[The proof](#the-proof)** · **[First steps](#first-steps)**
@@ -48,6 +51,18 @@ governed path.
 | **Reversible by construction** | `syn at <ref>` · `syn audit replay` | Nothing written is something you cannot trace back and undo |
 | **Tamper evident, git native** | `syn audit verify` | The audit trail rides git's own integrity guarantees |
 | **Provable, not just auditable** | `syn verify` | A signed, offline report that no fact was silently overwritten |
+
+<br/>
+
+|  | Hosted AI memory | **Synapse** |
+|---|:---:|:---:|
+| Where your knowledge lives | vendor servers | **your git repository** |
+| Non-corruption guarantee | estimated by an LLM judge | **proven, signed, offline** |
+| Roll back a bad write | rarely, if ever | **`syn undo`, `syn at <ref>`** |
+| Rebuild the state from source | impossible (the store is the source) | **`syn verify --rebuild`** |
+| Time-travel to a past belief | no | **`syn search --as-of <date>`** |
+| Runs offline, no account | usually no | **always** |
+| Telemetry | common | **none** |
 
 ---
 
@@ -94,6 +109,17 @@ Portuguese.
 ---
 
 ## Install
+
+### npm (any platform with Node 18+)
+
+```bash
+npx @febasi/synapse init ~/brain      # run once, no install
+npm install -g @febasi/synapse        # or install syn globally
+```
+
+The launcher pulls the signed binary for your platform on first run. Published from the public
+mirror with [npm provenance](https://docs.npmjs.com/generating-provenance-statements), so the
+link back to this repo's build is verifiable on the package page.
 
 ### One-liner (macOS, Linux)
 
@@ -169,6 +195,17 @@ The full walkthrough is in **[ONBOARDING.md](./ONBOARDING.md)**.
 ## For your AI assistant
 
 Synapse is built to be driven by an AI over [MCP](https://modelcontextprotocol.io) (`syn mcp`).
+It exposes **25 tools** across five groups, and every write is a proposal that lands in your
+review queue, never a silent commit.
+
+| Group | Tools do what |
+|---|---|
+| **Read** | keyword, semantic, and cross-type search; graph and ego-graph; `blame` and `diff` on any fact; `workspace_health` |
+| **Write (proposed)** | `capture_fact`, `link_entity`, `update_status`, tag and topic edits, all gated for review |
+| **Audit and verify** | `verify` (the signed non-corruption report) and `replay_proposal` |
+| **Federation** | search and read across many workspaces from one brain |
+| **Maintenance** | `reindex` the disposable SQLite index from Markdown |
+
 Two machine-oriented files teach any agent the right, token-efficient way to use it.
 
 - **[`skills/synapse/SKILL.md`](./skills/synapse/SKILL.md)** is a portable
@@ -183,19 +220,32 @@ Two machine-oriented files teach any agent the right, token-efficient way to use
 
 ---
 
-## Gatekeeper and SmartScreen
+## Verify your download
 
-The binaries are not yet code-signed. The one-line installer handles macOS for you.
-
-- **macOS**: `xattr -dr com.apple.quarantine /usr/local/bin/syn`
-- **Windows**: SmartScreen prompts once, then *More info, Run anyway*.
-- **Linux**: nothing special.
-
-Verify the bytes against the checksum on the release page:
+Every release ships a `SHA256SUMS` manifest signed with keyless
+[Sigstore](https://www.sigstore.dev/) / cosign (no long-lived key, the signing identity is the
+release workflow itself, logged in the public Rekor transparency ledger). npm builds carry
+[provenance](https://docs.npmjs.com/generating-provenance-statements) on top. You can prove the
+bytes came from this repo's build before you run them:
 
 ```bash
-shasum -a 256 ~/Downloads/synapse-*-*.tar.gz
+cosign verify-blob \
+  --bundle SHA256SUMS.cosign.bundle \
+  --certificate-identity-regexp '^https://github.com/romulofebasi/synapse/\.github/workflows/release\.yml@refs/tags/v' \
+  --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
+  SHA256SUMS
+sha256sum --check --ignore-missing SHA256SUMS   # your archive: OK
 ```
+
+Full walkthrough in [VERIFYING-RELEASES.md](./VERIFYING-RELEASES.md).
+
+> [!NOTE]
+> Signing proves **provenance and integrity**. It is not Apple notarization or a Windows
+> Authenticode certificate, so the OS still gatekeeps an unrecognized publisher on first run.
+> The one-line installer clears macOS quarantine for you; otherwise:
+> - **macOS**: `xattr -dr com.apple.quarantine /usr/local/bin/syn`
+> - **Windows**: SmartScreen prompts once, then *More info, Run anyway*.
+> - **Linux**: nothing special.
 
 ---
 
