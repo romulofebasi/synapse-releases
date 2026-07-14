@@ -68,9 +68,16 @@ governed path.
 
 ## The proof
 
-Synapse ships a benchmark that drives a real agent, Claude Code, through the full memory loop
-over MCP, then grades the memory it leaves behind rather than the conversation. All numbers are
+Synapse ships a benchmark that drives a real agent (Claude Code) through the full memory loop
+over MCP, then grades the memory it leaves behind, not the conversation. Every number is
 owner-run and reproducible.
+
+<div align="center">
+<img src="assets/brand/benchmark-scorecard.png" width="840" alt="Agent-in-the-loop benchmark scorecard. Insertion: pass@1 80 percent (CI 55 to 93 percent). Correction: pass@1 88 percent. Contradiction, agent: 10 of 10 runs, non-corruption every run. Contradiction, gate: detected 100 percent in isolation. Retrieval under noise: end-to-end 100 percent." />
+</div>
+
+<details>
+<summary>Prefer the numbers as text, with confidence intervals?</summary>
 
 | Scenario | What it measures | Result |
 |---|---|---|
@@ -80,31 +87,32 @@ owner-run and reproducible.
 | **Contradiction, gate** | the deterministic gate detects and blocks, in isolation | **100%** detect and block |
 | **Retrieval under noise** | the right answer survives thousands of distractors | recall@10 **100%**, e2e **100%** |
 
-Contradiction defense is **two independent layers**. A capable agent notices the conflict and
-asks first. When it does not, the deterministic gate catches the write and holds it for review.
+</details>
 
-<div align="center">
-<img src="assets/brand/two-layer-defense.png" width="820" alt="Contradiction defense is two layers: the agent spots the conflict and asks first, and if it slips, the Synapse gate detects it and blocks the write." />
-</div>
+Contradiction defense is the headline, and it is **two independent layers**. A capable agent
+notices the conflict and asks first. When it does not, the deterministic gate catches the write
+and holds it for review. Across every run, no existing fact was ever silently overwritten.
 
-Retrieval stays reliable as noise grows. The right answer keeps surfacing even as thousands of
-unrelated notes pile into the same workspace.
+Retrieval holds up as the workspace fills. It survives adversarial noise, and it stays sharp at
+the very top of the list.
 
-<div align="center">
-<img src="assets/brand/noise-resilience.png" width="820" alt="Retrieval under noise: recall at 10 holds at 1.0 as distractors scale to 8000, while a naive expectation would decline." />
-</div>
+<table align="center">
+<tr>
+<td width="50%" valign="top" align="center">
+<img src="assets/brand/noise-resilience.png" width="410" alt="Retrieval under noise: recall at 10 holds at 1.0 as distractors scale to 8000, while a naive expectation would decline." />
+<br /><sub><b>Survives noise.</b> recall@10 holds at 1.0 as distractors scale to 8,000. The dashed line is what naive retrieval would do.</sub>
+</td>
+<td width="50%" valign="top" align="center">
+<img src="assets/brand/retrieval-quality.png" width="410" alt="Retrieval quality as the workspace grows: recall at 1 rises to 0.85 with passage chunking, up from 0.78, and recall at 10 holds at 1.0 across 463 mixed entities." />
+<br /><sub><b>Stays sharp.</b> the right fact is answer number one 85% of the time (up from 78% before passage chunking) and always in the top ten.</sub>
+</td>
+</tr>
+</table>
 
-It also stays sharp at the top of the list. As six professionals' full quarters pile into one
-workspace, the right fact is answer number one 85 percent of the time (up from 78 percent
-before passage-level embeddings) and is in the top ten on every tier.
-
-<div align="center">
-<img src="assets/brand/retrieval-quality.png" width="820" alt="Retrieval quality as the workspace grows: recall at 1 rises to 0.85 with passage chunking, up from 0.78, and recall at 10 holds at 1.0 across 463 mixed entities." />
-</div>
-
-New to these terms? The [**plain-language guide**](BENCHMARKS_EXPLAINED.md) explains e2e, the
-gate, recall@10, distractors, and where the benchmark is honestly weak, in English and
-Portuguese.
+> [!NOTE]
+> **New to these terms?** The [plain-language guide](BENCHMARKS_EXPLAINED.md) explains e2e, the
+> gate, recall@10, distractors, and where the benchmark is honestly weak, in English and
+> Portuguese.
 
 ---
 
