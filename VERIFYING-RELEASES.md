@@ -1,61 +1,63 @@
 # Verifying a Synapse release
 
-Synapse's promise is *provable non-corruption*, so the binaries you download are
-**signed**. You can prove they came from this project's release workflow and were
-not tampered with in transit.
+A release signature and checksum help authenticate the bytes you downloaded. Workspace integrity checks answer a different question. Neither establishes general factual truth or freedom from defects.
 
-Signing is **keyless [Sigstore](https://www.sigstore.dev/) / cosign**: there is no
-long-lived private key to steal or rotate. The signing identity **is** the GitHub
-Actions release workflow on the pushed tag, and every signature is recorded in the
-public [Rekor](https://docs.sigstore.dev/logging/overview/) transparency log. npm
-builds additionally carry [provenance](https://docs.npmjs.com/generating-provenance-statements),
-tying each package back to the exact CI run that built it. Each GitHub release
-attaches:
+## Release evidence
 
-- the platform archives (`synapse-<version>-<target>.tar.gz` or `.zip`),
-- `SHA256SUMS`, a checksum manifest over every archive,
-- `SHA256SUMS.cosign.bundle`, the cosign signature, certificate, and Rekor entry
-  for `SHA256SUMS`.
+The published archive workflow supplies platform archives, a `SHA256SUMS` manifest and a `SHA256SUMS.cosign.bundle`. The bundle contains signature/certificate evidence for the manifest. Verify the expected GitHub workflow identity and issuer, not merely the existence of a signature.
 
-> The one-line installer (`install.sh`) verifies the checksum automatically, and
-> the cosign signature too when `cosign` is on your PATH. The steps below are the
-> manual equivalent.
+The expected identity is the tagged release workflow in `romulofebasi/synapse`, even though these assets are distributed through `synapse-releases`. npm provenance, when present for a selected package, is separate evidence; the npm launcher does not perform the archive workflow below.
+
+<picture>
+  <source media="(max-width: 600px)" srcset="assets/diagrams/release-trust-mobile.svg">
+  <img src="assets/diagrams/release-trust.svg" alt="Manual verification: pin a release, authenticate its checksum manifest, compare the selected archive's SHA-256, then inspect the installed executable.">
+</picture>
 
 ## Verify (one time: install cosign)
 
-Install [cosign](https://docs.sigstore.dev/cosign/system_config/installation/)
-(`brew install cosign`, or the release binary from sigstore/cosign).
+Install cosign from the [official project installation instructions](https://docs.sigstore.dev/cosign/system_config/installation/), then use the format supported by your installed version. Retain the exact release tag, archive, manifest and signature bundle together.
 
 ## Verify a download
 
-From a directory holding the release assets (`SHA256SUMS`,
-`SHA256SUMS.cosign.bundle`, and the archive you downloaded):
+Choose a tagged release and target. Download its archive, `SHA256SUMS` and `SHA256SUMS.cosign.bundle`. Before extraction, authenticate the manifest:
 
 ```bash
-# 1. Prove the checksum manifest was signed by the release workflow.
 cosign verify-blob \
   --bundle SHA256SUMS.cosign.bundle \
   --certificate-identity-regexp '^https://github.com/romulofebasi/synapse/\.github/workflows/release\.yml@refs/tags/v' \
   --certificate-oidc-issuer 'https://token.actions.githubusercontent.com' \
   SHA256SUMS
-# => "Verified OK"
-
-# 2. Prove your archive matches the (now trusted) manifest.
-sha256sum --check --ignore-missing SHA256SUMS
-# => synapse-<version>-<target>.tar.gz: OK
 ```
 
-Both steps must pass. Step 1 fails if the manifest was not signed by this
-project's release workflow (a forged or re-hosted artifact set); step 2 fails if
-the archive was altered after signing.
+Inspect the verified tag identity against your selected tag; the example expression accepts the project's `v` tag family. A compatible cosign version may support a stricter exact certificate identity for the chosen tag. An unexpected identity, missing bundle or verification failure stops this manual workflow.
+
+Then compare the selected archive to its entry in the authenticated manifest. On systems providing GNU `sha256sum`:
+
+```bash
+sha256sum --check --ignore-missing SHA256SUMS
+```
+
+Confirm that the **specific archive you plan to extract** is present, appears in the authenticated manifest and reports `OK`. A successful check of some other file is insufficient. On macOS, `shasum -a 256 <archive>` prints the selected archive's digest for exact comparison with its manifest entry; replace the placeholder with the actual filename.
+
+Require both signature verification and exact checksum agreement. Do not extract/run the archive when either check is absent, failed or applies to the wrong artifact. Archive provenance and subsequent binary adoption remain separate from source-code review and operating-system signing/notarization policy.
 
 ## What this proves (and does not)
 
-- **Proves:** the `SHA256SUMS` was produced by the Synapse release workflow on a
-  `v*` tag, is logged in Rekor, and your archive hashes to an entry in it.
-  Provenance and integrity, offline-checkable.
-- **Does not prove:** that the source is bug-free, only that the binary is the one
-  this project's CI built and published.
+The checks authenticate a manifest under the expected workflow identity and establish that your selected archive matches a listed digest. They do not prove bug-free source, Apple notarization, complete supply-chain safety, workspace integrity or the truth of a stored claim.
 
-Companion to `syn verify` (which proves your *memory* was not silently corrupted):
-this proves the *tool itself* was not.
+`syn verify` separately reports documented properties of a selected workspace and release. Inspect named checks, exclusions, prerequisites and skipped signing. It is not a universal proof that no silent alteration ever occurred.
+
+## Convenience installer behavior
+
+The current [installer](install.sh) is **best-effort**, rather than the strict manual policy above:
+
+| Condition | Current behavior |
+| :-- | :-- |
+| Manifest, matching entry and local hash utility are available | Compare the archive digest; a detected mismatch stops installation. |
+| Checksum manifest cannot be downloaded | Warn and continue without checksum verification. |
+| Matching manifest entry or local hash utility is unavailable | The checksum comparison can be skipped. |
+| cosign and signature bundle are available | Attempt signature verification. |
+| Signature verification fails | Warn and continue on the checksum path. |
+| cosign or bundle is unavailable | Signature verification can be skipped. |
+
+Review the script before executing it. Setting `SYNAPSE_VERSION` pins the requested tag, but does not make these optional checks mandatory. Use the explicit manual workflow when both checks are required by your installation policy. This documentation update does not change the installer.

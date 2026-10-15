@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc"><title id="title">Local knowledge, reusable through CLI and MCP</title><desc id="desc">Markdown in your Git repository is the current knowledge content source. A local SQLite search projection is derived from the files. Developers and agents retrieve that knowledge through CLI and MCP. The projection can be rebuilt with syn reindex.</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#5B3EE0"/></marker></defs><rect width="1200" height="520" rx="24" fill="#F6F4EF"/>
+<text x="48" y="48" fill="#5B3EE0" font-family="Sora, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="700" text-anchor="start">SYNAPSE  /  THE LOCAL KNOWLEDGE FOUNDATION</text>
+<text x="48" y="102" fill="#1A1A1A" font-family="Sora, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="32" font-weight="650" text-anchor="start">Your files. Searchable context. Reusable knowledge.</text>
+<text x="48" y="142" fill="#5F596B" font-family="Sora, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="23" font-weight="400" text-anchor="start">Keep the content inspectable and carry useful context into the next task.</text>
+<rect x="48" y="205" width="304" height="172" rx="16" fill="#FFFFFF" stroke="#D5CFE5" stroke-width="2"/>
+<text x="70" y="250" fill="#1A1A1A" font-family="Sora, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="25" font-weight="650" text-anchor="start">Markdown + Git</text>
+<text x="70" y="296" fill="#5F596B" font-family="Sora, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="400" text-anchor="start">Current knowledge content</text>
+<text x="70" y="335" fill="#5F596B" font-family="Sora, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="400" text-anchor="start">Your files and review workflow</text>
+<path d="M358 290L440 290" fill="none" stroke="#5B3EE0" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="448" y="205" width="304" height="172" rx="16" fill="#5B3EE0" stroke="#5B3EE0" stroke-width="2"/>
+<text x="470" y="250" fill="#FFFFFF" font-family="Sora, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="25" font-weight="650" text-anchor="start">Local search index</text>
+<text x="470" y="296" fill="#FFFFFF" font-family="Sora, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="400" text-anchor="start">Derived SQLite projection</text>
+<text x="470" y="335" fill="#FFFFFF" font-family="Sora, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="400" text-anchor="start">Keyword and semantic retrieval</text>
+<path d="M758 290L840 290" fill="none" stroke="#5B3EE0" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="848" y="205" width="304" height="172" rx="16" fill="#FFFFFF" stroke="#D5CFE5" stroke-width="2"/>
+<text x="870" y="250" fill="#1A1A1A" font-family="Sora, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="25" font-weight="650" text-anchor="start">CLI + MCP</text>
+<text x="870" y="296" fill="#5F596B" font-family="Sora, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="19" font-weight="400" text-anchor="start">Developer and agent access</text>
+<text x="870" y="335" fill="#5F596B" font-family="Sora, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="400" text-anchor="start">One shared Synapse core</text>
+<rect x="48" y="417" width="1104" height="58" rx="10" fill="#FFFFFF" stroke="#D5CFE5" stroke-width="2"/>
+<text x="72" y="454" fill="#5F596B" font-family="Sora, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="20" font-weight="400" text-anchor="start">The search projection rebuilds with syn reindex. Retention and verification have separate contracts.</text>
+</svg>

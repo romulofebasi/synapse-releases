@@ -1,71 +1,57 @@
 # Synapse
 
-> Governed, local-first memory for AI agents. One `syn` binary is both a CLI (humans)
-> and an MCP server (`syn mcp`, agents), bound to the same core. Six built-in
-> linked entity types (project, person, entity/org, api, task, note), **plus
-> any registered custom types** (`.synapse/types.toml`; discover them with
-> `search_everything` / `list_by_type`). Stored as Markdown + YAML frontmatter
-> (source of truth) with a disposable SQLite index and on-device semantic search.
+Operational memory for agents, with governed changes, preserved history, and explicit integrity checks.
+
+One `syn` executable exposes a CLI and MCP server over the same core. Knowledge content lives in Markdown with YAML frontmatter; a derived SQLite index supplies retrieval. Common types include projects, people, organizations, APIs, tasks and notes. A workspace may register custom types.
+
+## Discover the installed contract
+
+This public distribution repository can document releases older than the current development branch. Start with `syn --version` and `syn --help`; inspect command help and the connected MCP client's tool list. Do not assume a fixed tool count or development-only shared authority features.
+
+When available, read `synapse://capabilities` or use `syn context` to discover workspace types, fields, relationships and proposal shapes. An unavailable tool or field needs a compatible installed version, not an invented fallback.
 
 ## The load-bearing rule
 
-Over MCP the assistant **never writes directly**. Write tools enqueue a
-*proposal*; the human applies it with `syn pending accept <id>`. Never claim a
-write succeeded. Surface the pending id and the accept command. Never edit
-Markdown or `.synapse/` by hand; that bypasses provenance and the audit trail.
+Use supported proposal tools for knowledge changes. Treat every proposal as pending until the returned state and an explicit supported review action establish otherwise. Show the exact pending identifier and review command. Never report an accepted change merely because you submitted a request.
 
-## MCP tools (25)
+The governed workflow uses `syn pending show <id>` before `syn pending accept <id>`. Respect the selected release's policy and authority requirements. Do not edit source Markdown or `.synapse/` behind the tool's governance boundary to manufacture success. Required review cannot be replaced by model confidence.
 
-Every read returns `{ "result": …, "freshness"? }` as `structuredContent`
-(read that field; the text mirror is compact JSON). Search hits and
-`get_entity` attach `resource_link`s; `resources/read` a hit directly. Every
-tool carries MCP annotations (reads are `readOnlyHint`; writes are additive, not
-destructive); a client can auto-allow reads and gate writes. High-value reads
-also attach a deterministic `_meta` sidecar (SYN-308): `workspace`, a `precision`
-band count for searches, and a `next_step`, read it to judge if results are
-on-topic before spending tokens. Recoverable errors come back as `invalid_params`
-with a `data.remediation` naming the exact fix (SYN-309); retry on that, don't give up.
+<a id="mcp-tools-25"></a>
 
-Read (local): `workspace_overview {recent?}` (counts + recent, orient here) ·
-`workspace_health {days?}` (activity + hygiene + a `next_steps` list with the exact `syn` command to hand the human, surface what needs attention) ·
-`search_knowledge {query,type?,tag?,owner?,limit?,mode?}` → `{type,id,title,snippet,matched_by?,relevance?,compatibility?}[]`
-(mode = hybrid|semantic|no-vector; `matched_by` = which legs surfaced it (fts/vector/graph); `relevance` = strong|good|partial band; `compatibility` = bounded [0,1] score from leg agreement + rank position. Legs run in parallel; fused order deterministic) ·
-`search_everything {query,...}` (same hybrid retrieval across **every** kind, built-in and custom, no type filter) ·
-`get_entity {type,id}` → `{markdown}` ·
-`get_entities {items:[{type,id,fields?}]}` (batch + field projection) ·
-`list_by_type {type,status?,limit?,cursor?}` (paginated) ·
-`project_graph {type,id,rel?}` (neighbours) ·
-`recent_changes {since,limit?}` (audit delta, newest first) ·
-`blame {type,id}` (provenance lineage + trust band) · `diff {ref?}` (git-over-time changes) ·
-`verify` (proves the memory was not silently corrupted, the headline; offer it after a write) ·
-`query {group_by,filter?,limit?}` (read-only aggregation, counts by
-type|status|owner|priority|due|tag without paging; no SQL, ADR-023).
-Federation (opt-in): `list_workspaces` · `federated_search {query,workspaces?}`
-(keyword, not semantic) · `get_entity_from` · `get_workspace_manifest`.
-Maintenance: `reindex {full?,relink?}`. Audit: `replay_proposal` (client-driven).
-Resource: read `synapse://capabilities` (or run `syn context`) for the workspace
-vocabulary (entity types + fields, link relations, reserved `x-*` keys, proposal
-payload shapes, enrichment sources) to avoid proposing an invalid kind/rel/key.
-Write proposals (enqueue, never apply): `capture_fact`, `link_entity`,
-`update_status`, `add_workspace_topic`, `add_workspace_tag`, and
-`propose_batch {proposals:[{kind,payload}]}`, bundle many into one accept.
-If you used context from another connected MCP source (a calendar, tickets)
-to fill people/project/tags/title, set the write's `enriched_from` to that
-source class, the write is then always human-gated (SYN-303). A `capture_fact`
-create is reversible after accept with `syn undo <id>`.
+## MCP tools
+
+Discover actual tool schemas through the MCP client. Depending on the release, common tools include:
+
+| Need | Candidate tools to discover | Practice |
+| :-- | :-- | :-- |
+| Orient | `workspace_overview`, `workspace_health` | Inspect counts, freshness and actionable omissions first. |
+| Find relevant context | `search_knowledge`, `search_everything` | Use bounded snippets and supported filters. |
+| Read known records | `get_entity`, `get_entities`, `list_by_type` | Fetch only needed records/fields; paginate inventories. |
+| Follow relationships | `project_graph`, `recent_changes` | Prefer a scoped relationship or delta over a workspace dump. |
+| Inspect history | `blame`, `diff` | Preserve attribution and distinguish current from historical facts. |
+| Check integrity | `verify` | Report named checks, failures, exclusions and signing prerequisites. |
+| Propose a change | `capture_fact`, `link_entity`, `update_status`, `propose_batch` | Submit supported payloads; inspect the returned state and review boundary. |
+
+Prefer returned `structuredContent` when the installed server supplies it. Follow explicit remediation fields rather than guessing argument names. Resource links are references, not permissions. A ranking score is not a probability that a fact is true.
 
 ## Token-efficient usage
 
-- Orient with `workspace_overview`; pick the cheapest read: `get_entity` for a
-  known id, `list_by_type` for an inventory, `project_graph` for relationships,
-  `search_knowledge` to discover. Don't dump the workspace.
-- `search_knowledge` returns snippets, not bodies. Triage, then `get_entity`/
-  `get_entities` only what you must read fully.
-- Choose a search `mode` on purpose: `no-vector` (cheapest, exact-term),
-  `semantic` (meaning-only), `hybrid` (default).
-- Batch related writes with `propose_batch`; hand the user one accept.
+1. Orient once, then select the narrowest query.
+2. Triage search titles and snippets before fetching full records.
+3. Use known IDs, field projection and pagination where supported.
+4. Group related supported proposals while keeping their exact review input visible.
+5. Surface source revisions, stale context and unavailable coverage.
+
+Search modes may include `hybrid`, `semantic` and `no-vector`; inspect the installed schema. Semantic search requires compatible selected models. Downloading models requires consent. A hosted embedding provider sends configured content to that provider; local processing does not make every optional integration offline.
+
+## Federation
+
+Opt in to specific workspaces before querying them. Discover available workspace cards and supported federation tools. Preserve each workspace's scope and access rules; a local connection does not establish organization-wide approval authority.
+
+## Integrity and evidence
+
+`syn verify` checks documented properties of the selected workspace and release. It does not establish general semantic truth, detect every contradiction in natural language, prove complete unknown history, or certify an agent's compliance. A skipped signing check is not a signed result. Undo support is operation-specific; discover the available command and affected proposal before promising reversibility.
 
 ## Skill
 
-The full operating procedure is the Agent Skill. Install it with
-`syn skill install` (drops `SKILL.md` into `~/.claude/skills/synapse-second-brain/`).
+See the [portable Agent Skill](skills/synapse/SKILL.md). Where supported, `syn skill install` installs the skill for a compatible client. Inspect its reported destination and the client's discovery rules.
