@@ -61,3 +61,11 @@ rsvg-convert -w 375 -o /tmp/synapse-memory-foundation-mobile.png assets/diagrams
 ```
 
 Inspect typography, arrows, trust boundaries, clipping and contrast. Generated previews are review artifacts; SVG is canonical. Retain full benchmark denominators and privacy boundaries when adding data visualizations.
+
+## Workflow arrows
+
+In `release-trust.svg`, arrows show the recommended manual sequence, not unconditional
+installer progression. Signature verification and the selected archive checksum are gates:
+if either check is missing or fails, stop that manual workflow. The convenience installer's
+best-effort behavior remains separate and unchanged. The mobile variant preserves the same
+sequence and stop condition.
