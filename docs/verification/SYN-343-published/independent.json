@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "scope": "independent retained-byte/public-claim review, no publication mutation or fresh network",
+  "checks": {
+    "sevenAssetsSealedBeforeParsing": true,
+    "sourceMirrorAPISizeDigestAndNotes": true,
+    "exactFiveManifestEntries": true,
+    "localAnnotatedTagAndCanonicalGitBlobs": true,
+    "manifestLockVersions": true,
+    "sourceNotesCanonicalSection": true,
+    "allFourArchives": {
+      "darwin-arm64": {
+        "fullInventoryChecked": true,
+        "canonicalDocumentsByteExact": true,
+        "sha256": "6d9bfddf188475767b94712d8971cff9fa66f9aa088a4b3805f9ac59b531f401",
+        "size": 37689216
+      },
+      "linux-x64": {
+        "fullInventoryChecked": true,
+        "canonicalDocumentsByteExact": true,
+        "sha256": "8f74259df60c6425ef9f26f97c68a1fefbc0c14069799c3890f3a2048478ad0b",
+        "size": 46297760
+      },
+      "linux-arm64": {
+        "fullInventoryChecked": true,
+        "canonicalDocumentsByteExact": true,
+        "sha256": "18d69d0f86f7f0d021599ec5c7134b3d2624e9a19b83b84c5bcf6916e66b3cbd",
+        "size": 44560536
+      },
+      "win32-x64": {
+        "fullInventoryChecked": true,
+        "canonicalDocumentsByteExact": true,
+        "sha256": "05c9a2e190b24a45c7ad7ca7391f3f307bb1f3d946de8c356d26bbe266fd3e18",
+        "size": 44078592
+      }
+    },
+    "allFourNpmBinaries": {
+      "darwin-arm64": {
+        "sriVerified": true,
+        "binaryByteIdentity": true,
+        "provenanceMetadataOnly": true
+      },
+      "linux-x64": {
+        "sriVerified": true,
+        "binaryByteIdentity": true,
+        "provenanceMetadataOnly": true
+      },
+      "linux-arm64": {
+        "sriVerified": true,
+        "binaryByteIdentity": true,
+        "provenanceMetadataOnly": true
+      },
+      "win32-x64": {
+        "sriVerified": true,
+        "binaryByteIdentity": true,
+        "provenanceMetadataOnly": true
+      }
+    },
+    "launcherExactVersionAndFourOptionalDependencies": true,
+    "allFiveNpmSRI": true,
+    "installedHostAndLauncherBytes": true,
+    "recordedHostVersionLog": true,
+    "cosignExactIdentityIssuerToolDigestAndSealedSubject": true,
+    "cosignIndependentlyRerun": false,
+    "npmAttestationCryptographyPerformed": false,
+    "publicCandidateSensitivePathOrSecretScanPassed": true
+  },
+  "retainedProofDigestsMatch": true,
+  "originalCandidateSHA256": {
+    "README.md": "513ff48fcc1c028d1b4419201d6181c66b6c0ed947e641193ab3ae5891c21a8b",
+    "receipt.json": "8f2755b8c58ccee92f26c680066d25f7d09744a687121c4fb54a8b4b5b9c9733"
+  },
+  "candidateSHA256": {
+    "README.md": "1ee849bdf0b5969c2f5161b957232199959a5d7afbcb06cf63f251e9f4c86035",
+    "receipt.json": "c522056423f4fa465ee7a983c10c2b1859e60685455de3f9db3110666c1d19e9"
+  },
+  "verdict": "PASS within the explicitly bounded retained-evidence and public-claim review after the wording correction",
+  "source": {
+    "commit": "23ba013d9b57588a58faf6c7ba4b16a9ecd3085f",
+    "tag": "v1.5.1",
+    "annotatedTagObject": "04531c249cf7dfa6a0af7e5c18351c08e9bd0535"
+  },
+  "correction": {
+    "severity": "P2",
+    "status": "resolved",
+    "finding": "The original wording implied exhaustive preservation of historical publication state without a measured complete pre/post baseline.",
+    "verifiedChanges": [
+      "README final paragraph narrowed to audit actions and separate historical evidence",
+      "receipt limits[4] explicitly disclaims an exhaustive older-state audit"
+    ],
+    "onlyTheseTwoByteReplacements": true,
+    "sourceAndPublicCopiesByteIdentical": true,
+    "originalCandidatePreserved": true
+  },
+  "independence": {
+    "actualPostpublicationExecution": "producer-repair author execution, not a fresh independent attack",
+    "thisReview": "Independent direct stdlib reconciliation of retained bytes and immutable Git blobs without importing reusable verifier functions",
+    "reusablePrivateHelpers": "This reviewer previously prepared these helpers; that authorship is disclosed, not presented as wholly independent verifier-code review",
+    "originalProducerMutationReview": "Separate original independent 8/8 campaign remains distinct; not replayed here"
+  },
+  "limits": [
+    "No fresh downloads, remote state validation, installs, binary or launcher execution, publication, builds or GUI actions by this review.",
+    "Retained real cosign execution and exact identity, issuer, subject and pinned tool digest were inspected; cosign was not independently rerun.",
+    "npm SRI and advertised provenance metadata were checked; npm provenance signature cryptography was not performed.",
+    "All four platform binaries and full archive documents were compared by bytes; original local execution covered macOS arm64 only.",
+    "Earlier partial registry acquisition and setup-invalid cosign/diagnostic attempts remain historical failures and are not accepted evidence.",
+    "No exhaustive pre/post baseline of older tags, assets or protected binaries was available.",
+    "No new mutation campaign was run; assertion-kill counts from other campaigns are not attributed to this review."
+  ]
+}

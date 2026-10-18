@@ -1,0 +1,352 @@
+{
+  "schema": "synapse.release-publication-verification/1",
+  "reviewedAt": "2026-10-18T06:45:15.656336+00:00",
+  "status": "verified within stated scope",
+  "tag": "v1.5.1",
+  "sourceCommit": "23ba013d9b57588a58faf6c7ba4b16a9ecd3085f",
+  "annotatedTagObject": "04531c249cf7dfa6a0af7e5c18351c08e9bd0535",
+  "sourceRelease": {
+    "repository": "romulofebasi/synapse",
+    "id": 416278381,
+    "publishedAt": "2026-10-18T06:37:37Z"
+  },
+  "publicRelease": {
+    "repository": "romulofebasi/synapse-releases",
+    "id": 416278498,
+    "publishedAt": "2026-10-18T06:37:58Z"
+  },
+  "actualWorkflows": {
+    "source": {
+      "repository": "romulofebasi/synapse",
+      "run": {
+        "id": 39103431019,
+        "name": "release",
+        "head_sha": "23ba013d9b57588a58faf6c7ba4b16a9ecd3085f",
+        "head_branch": "v1.5.1",
+        "event": "push",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-10-18T06:16:00Z",
+        "updated_at": "2026-10-18T06:37:40Z"
+      },
+      "jobs": [
+        {
+          "id": 117604193623,
+          "name": "validate tagged release inputs",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-18T06:16:03Z",
+          "completed_at": "2026-10-18T06:16:14Z"
+        },
+        {
+          "id": 117604234908,
+          "name": "build (x86_64-pc-windows-msvc)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-18T06:16:18Z",
+          "completed_at": "2026-10-18T06:37:19Z"
+        },
+        {
+          "id": 117604234915,
+          "name": "build (aarch64-unknown-linux-gnu)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-18T06:16:19Z",
+          "completed_at": "2026-10-18T06:23:20Z"
+        },
+        {
+          "id": 117604234921,
+          "name": "build (aarch64-apple-darwin)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-18T06:16:19Z",
+          "completed_at": "2026-10-18T06:20:06Z"
+        },
+        {
+          "id": 117604234978,
+          "name": "build (x86_64-unknown-linux-gnu)",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-18T06:16:17Z",
+          "completed_at": "2026-10-18T06:25:54Z"
+        },
+        {
+          "id": 117607901750,
+          "name": "publish verified release assets",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-18T06:37:21Z",
+          "completed_at": "2026-10-18T06:37:39Z"
+        }
+      ]
+    },
+    "mirror": {
+      "repository": "romulofebasi/synapse",
+      "run": {
+        "id": 39104711966,
+        "name": "mirror-release",
+        "head_sha": "23ba013d9b57588a58faf6c7ba4b16a9ecd3085f",
+        "head_branch": "main",
+        "event": "workflow_run",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-10-18T06:37:42Z",
+        "updated_at": "2026-10-18T06:38:01Z"
+      },
+      "jobs": [
+        {
+          "id": 117607968677,
+          "name": "mirror",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-18T06:37:44Z",
+          "completed_at": "2026-10-18T06:38:01Z"
+        }
+      ]
+    },
+    "npm": {
+      "repository": "romulofebasi/synapse-releases",
+      "run": {
+        "id": 39104728647,
+        "name": "npm publish",
+        "head_sha": "d8eaea6a01f6c5ea660646f2cb7460e8107b922d",
+        "head_branch": "v1.5.1",
+        "event": "release",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-10-18T06:37:59Z",
+        "updated_at": "2026-10-18T06:39:06Z"
+      },
+      "jobs": [
+        {
+          "id": 117608018069,
+          "name": "publish",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-18T06:38:02Z",
+          "completed_at": "2026-10-18T06:39:05Z"
+        }
+      ]
+    }
+  },
+  "publicAssets": {
+    "SHA256SUMS": {
+      "size": 528,
+      "sha256": "e679d71a4ce42ec1431b70df162072757268b610c7ca4ec427345d2a9910a001"
+    },
+    "SHA256SUMS.cosign.bundle": {
+      "size": 8453,
+      "sha256": "e07093cb00f2c5dbcdc80681b5db61cd37a59354f664919777d64ab8bddff1e2"
+    },
+    "release-metadata.json": {
+      "size": 485,
+      "sha256": "bfc82d5733c7c1e968cf7741ca2208168ba0ae4741bcd4929e53da860e65e250"
+    },
+    "synapse-1.5.1-aarch64-apple-darwin.tar.gz": {
+      "size": 16260038,
+      "sha256": "60bed27adbb497fede0b34f98e05191efd0591ae265120d0eec5bf7d66291c07"
+    },
+    "synapse-1.5.1-aarch64-unknown-linux-gnu.tar.gz": {
+      "size": 18838942,
+      "sha256": "f0b15f9f29ebc01cfabf21c5096780d353288b734e0edd78e7ec62ca5fd3f9ac"
+    },
+    "synapse-1.5.1-x86_64-pc-windows-msvc.zip": {
+      "size": 16714166,
+      "sha256": "2b78e3b21dfcbf3175958889206d951632c3469df805496f53231a2aed7819da"
+    },
+    "synapse-1.5.1-x86_64-unknown-linux-gnu.tar.gz": {
+      "size": 18522134,
+      "sha256": "90a3b32d47c17f123dc746e002813dd3e1143366bb7f9bfad9aa09360eee66bd"
+    }
+  },
+  "assetAdmission": {
+    "exactAssetCount": 7,
+    "allFilesNonzero": true,
+    "allDownloadedSizesAndAPI_SHA256DigestsMatch": true,
+    "sourceAndMirrorInventoryDigestsAndNotesEqual": true,
+    "exactSignedManifestEntryCount": 5,
+    "completionBeforeArchiveParsing": true
+  },
+  "cryptography": {
+    "performed": true,
+    "status": "verified",
+    "realTool": "official cosign darwin-arm64 binary",
+    "trustedToolSHA256": "5cf948c2f4dfe59687bdd0b8523709067383e03982cc543475c8a7dc70e92a76",
+    "certificateIdentity": "https://github.com/romulofebasi/synapse/.github/workflows/release.yml@refs/tags/v1.5.1",
+    "oidcIssuer": "https://token.actions.githubusercontent.com",
+    "subject": "SHA256SUMS",
+    "insecureVerificationBypass": false
+  },
+  "canonicalSource": {
+    "tagResolvesToReviewedCommit": true,
+    "inputSHA256": {
+      "Cargo.toml": "8e86b0bb4ddca347a5340df9b09bd41de35e1ff93e3a9056918bf9bc004c3d2a",
+      "Cargo.lock": "dbb6c2a8587ae7f60a0cc18db8023b89c881645232bb7445afeb33fd7477fde4",
+      "CHANGELOG.md": "f7cfc45016842c6fe8258119f34d29e5b91607b7c1286f4a2561fb6a9f1db797"
+    },
+    "documentSHA256": {
+      "README.md": "5079ee62dd1b3471fc61b87286392f1479192898fd5cad1d0aff8138e76ea991",
+      "LICENSE": "29a1392aadaf9789d58e6449fd97b647146f3dc9a193e3d15ecd4e269a59205d",
+      "CHANGELOG.md": "f7cfc45016842c6fe8258119f34d29e5b91607b7c1286f4a2561fb6a9f1db797"
+    },
+    "allFourArchiveDocumentsEqualRawGitBlobs": true,
+    "archivePlatforms": [
+      "darwin-arm64",
+      "linux-x64",
+      "linux-arm64",
+      "win32-x64"
+    ],
+    "lineEndingNormalization": false,
+    "sourceAndPublicNotesEqualCanonicalFirstReleaseSection": true
+  },
+  "npmPackages": {
+    "darwin-arm64": {
+      "name": "@febasi/synapse-darwin-arm64",
+      "version": "1.5.1",
+      "dist_integrity_verified": true,
+      "registry_integrity": "sha512-0oFcSGpXKMzrjJ381y+sdkNQNGIo4w4dDTDtiqhpP1tbulmUO3mqqypeCXJ2Kgz8x/pYza3KjBJqKGzJQ23vkg==",
+      "tarball_sha512": "d2815c486a5728cceb8c9dfcd72fac764350346228e30e1d0d30ed8aa8693f5b5bba59943b79aaab2a5e0972762a0cfcc7fa58cdadca8c126a286cc9436def92",
+      "registry_metadata_sha256": "46c8596c7ce53b03d3c7f88eba8eb6e3b90677a1d91282eac644620bd244c1e8",
+      "provenance_advertisement": {
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@febasi%2fsynapse-darwin-arm64@1.5.1",
+        "provenance": {
+          "predicateType": "https://slsa.dev/provenance/v1"
+        }
+      },
+      "provenance_cryptography_performed": false,
+      "binary_sha256": "6d9bfddf188475767b94712d8971cff9fa66f9aa088a4b3805f9ac59b531f401",
+      "binary_size": 37689216,
+      "source_and_npm_binary_identical": true
+    },
+    "linux-x64": {
+      "name": "@febasi/synapse-linux-x64",
+      "version": "1.5.1",
+      "dist_integrity_verified": true,
+      "registry_integrity": "sha512-CrPiHMDlr9wXN5bM1LgTwDRtIhpfqHRxhFiCq+CLMjyus8DMJ8KeZ3h4wrRFFpd+m9ALABc89AKhIM0Hcgg/lg==",
+      "tarball_sha512": "0ab3e21cc0e5afdc173796ccd4b813c0346d221a5fa87471845882abe08b323caeb3c0cc27c29e677878c2b44516977e9bd00b00173cf402a120cd0772083f96",
+      "registry_metadata_sha256": "0677d8b3968f2a20a9115858975510d9988dbfcd4b5d5154ff9d1c724429fd2c",
+      "provenance_advertisement": {
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@febasi%2fsynapse-linux-x64@1.5.1",
+        "provenance": {
+          "predicateType": "https://slsa.dev/provenance/v1"
+        }
+      },
+      "provenance_cryptography_performed": false,
+      "binary_sha256": "8f74259df60c6425ef9f26f97c68a1fefbc0c14069799c3890f3a2048478ad0b",
+      "binary_size": 46297760,
+      "source_and_npm_binary_identical": true
+    },
+    "linux-arm64": {
+      "name": "@febasi/synapse-linux-arm64",
+      "version": "1.5.1",
+      "dist_integrity_verified": true,
+      "registry_integrity": "sha512-KhgB3TDlVuNxv2TfvhZXBLmxbrABfW651bAKC271FZvpGrtQWkad3GVHunAD285hnPg2AtfAC/5SlGms0qOq2A==",
+      "tarball_sha512": "2a1801dd30e556e371bf64dfbe165704b9b16eb0017d6eb9d5b00a0b6ef5159be91abb505a469ddc6547ba7003dbce619cf83602d7c00bfe529469acd2a3aad8",
+      "registry_metadata_sha256": "f3940e626c419e6d9a71389270b9d9c34e2e5f24dcd69efa0942a8f4e9847807",
+      "provenance_advertisement": {
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@febasi%2fsynapse-linux-arm64@1.5.1",
+        "provenance": {
+          "predicateType": "https://slsa.dev/provenance/v1"
+        }
+      },
+      "provenance_cryptography_performed": false,
+      "binary_sha256": "18d69d0f86f7f0d021599ec5c7134b3d2624e9a19b83b84c5bcf6916e66b3cbd",
+      "binary_size": 44560536,
+      "source_and_npm_binary_identical": true
+    },
+    "win32-x64": {
+      "name": "@febasi/synapse-win32-x64",
+      "version": "1.5.1",
+      "dist_integrity_verified": true,
+      "registry_integrity": "sha512-lyD8fo1CL4fMbYttP4ZU0OZDJmOD/EjpY5nyNFHLj1SoB/hEQqnzqlhf5q9RoDqiKRD9rUKnOUzYbyGUIYS+wQ==",
+      "tarball_sha512": "9720fc7e8d422f87cc6d8b6d3f8654d0e643266383fc48e96399f23451cb8f54a807f84442a9f3aa585fe6af51a03aa22910fdad42a7394cd86f21942184bec1",
+      "registry_metadata_sha256": "ee1e8029fb1ab9d080bb4531c23b2a3aa9fbab593f4e6ea002fbb8eeffe54eb7",
+      "provenance_advertisement": {
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@febasi%2fsynapse-win32-x64@1.5.1",
+        "provenance": {
+          "predicateType": "https://slsa.dev/provenance/v1"
+        }
+      },
+      "provenance_cryptography_performed": false,
+      "binary_sha256": "05c9a2e190b24a45c7ad7ca7391f3f307bb1f3d946de8c356d26bbe266fd3e18",
+      "binary_size": 44078592,
+      "source_and_npm_binary_identical": true
+    },
+    "launcher": {
+      "name": "@febasi/synapse",
+      "version": "1.5.1",
+      "dist_integrity_verified": true,
+      "registry_integrity": "sha512-hpCiMutS6u6c+iTg3Vu007ec8tygVU6UfIS8/8UlqkN3pRroDexRjmOobJ0CV/m0QzsRtfc6EyDelpuaQE4Tcw==",
+      "tarball_sha512": "8690a232eb52eaee9cfa24e0dd5bb4d3b79cf2dca0554e947c84bcffc525aa4377a51ae80dec518e63a86c9d0257f9b4433b11b5f73a1320de969b9a404e1373",
+      "registry_metadata_sha256": "461a1f10bac5cdcf0f1e5f2f796a5aa6b23c4b1984fea0170a45083097321cf4",
+      "provenance_advertisement": {
+        "url": "https://registry.npmjs.org/-/npm/v1/attestations/@febasi%2fsynapse@1.5.1",
+        "provenance": {
+          "predicateType": "https://slsa.dev/provenance/v1"
+        }
+      },
+      "provenance_cryptography_performed": false,
+      "launcher_script_sha256": "66a50e5d138e1c593491c7a2d9590d3eec6b93695e965930f8d7ed55348fdcd8"
+    }
+  },
+  "hostExecution": {
+    "host": "darwin-arm64",
+    "npm_install_exit": 0,
+    "lifecycle_scripts_disabled": true,
+    "private_home_cache_and_configs": true,
+    "actual_launcher_exit": 0,
+    "observed_version": "syn 1.5.1",
+    "installed_binary_sha256": "6d9bfddf188475767b94712d8971cff9fa66f9aa088a4b3805f9ac59b531f401",
+    "installed_binary_matches_checked_source_and_npm": true,
+    "installed_launcher_matches_checked_npm": true,
+    "other_platforms_executed": false,
+    "live_inference": false
+  },
+  "proofSHA256": {
+    "completedAssets": "9335ed7bb6976158890903bb53926d205ffefd29f70aede28fb72b04b4be2f33",
+    "realCosign": "9ba980ad32fbde1f3e1467e55f732a7cca5d0ac345350c81d7ef1a60e672dc8a",
+    "canonicalDocumentsAndHostExport": "bd992964d966674d7be28ca9c084c530f52efcb1f24c6023457445eec50c0f78",
+    "sourceAndNpmComparison": "ac549c7299fc84fbbf783af7de101e6d6755fd7a2ce77f14c2883bd1fe33b82f",
+    "actualHostLauncher": "c79000a215bde0561a11c7da8b0ffafcf03647623c804d168e66892e8aed0e51",
+    "actualWorkflowFacts": "e4b755999eabc086393bf119dd3ba17e4d96e6a6bd44d47704a7b90b5532368a"
+  },
+  "verifierSHA256": {
+    "README.md": "f41e161ff5fc1ffa228f3fddb0e8f5c021b928c53560eddbb4be5942a5c0ebfe",
+    "verify.py": "ec2b3820e651cdb95482060bb94d949bd28896f2341000eee1021514c5f83360",
+    "cosign-verify.py": "c83b1646273e12a8dcecc4ab52e6a0505449e78098180a388978834f7e763e2c",
+    "launcher-smoke.py": "b90ee7cda5b2d55e1404f306e0a66e10e88fc1460b1c4d7025e5ec54f21c3a32"
+  },
+  "verifiersUnchanged": true,
+  "retainedNonpassingAttempts": [
+    {
+      "kind": "cosign invocation setup invalid",
+      "count": 2,
+      "detail": "Relative asset paths were passed to a helper that invokes cosign from a private temporary working directory. Both attempts exited 1. Failing stderr was not retained by the frozen wrapper. The same real tool and sealed bytes passed with absolute paths; the unchanged wrapper then passed. No signature rejection was established."
+    },
+    {
+      "kind": "incomplete first npm acquisition",
+      "count": 1,
+      "detail": "Three Unix package downloads completed before the exact Windows query returned E404. The partial acquisition was retained and not accepted as complete."
+    },
+    {
+      "kind": "registry response diagnostic setup invalid",
+      "count": 1,
+      "detail": "An initial diagnostic treated a JSON string error response as an object and raised AttributeError. The response was retained, then a type-aware diagnostic captured the actual 404."
+    },
+    {
+      "kind": "temporary exact Windows version unavailability",
+      "lastRecorded404": "2026-10-18T06:41:26Z",
+      "firstRecordedSuccessfulQuery": "2026-10-18T06:43:04.848336+00:00",
+      "detail": "The publisher recorded all five packages published, while an exact query returned 404 and a cache-busted packument omitted 1.5.1. A later fresh exact query succeeded without publication changes. A new complete five-package acquisition passed. The underlying registry cause was not established."
+    }
+  ],
+  "limits": [
+    "Only darwin-arm64 was executed locally, through the actual Node launcher with --version. Other platform binaries were compared as bytes.",
+    "Actual hosted builds and publication succeeded, but no independent build reproducibility, safe-code, inference, notarization or all-platform execution claim is made.",
+    "npm SHA512 SRI and advertised provenance metadata were checked. npm provenance attestation signatures were not independently verified. Source manifest signature verification is separate and was actually performed.",
+    "Raw logs, downloads, registry caches, signature bundle and private installation remain outside Git. The public report contains only allowlisted summaries and digests.",
+    "This read-only audit did not republish v1.5.0 or overwrite existing protected binaries. Historical evidence and earlier acquisitions remain separate; no exhaustive pre/post audit of older publication state is claimed.",
+    "The producer repair has a separate independent source and mutation review. This receipt does not replace it."
+  ],
+  "reviewRole": "Separate read-only post-publication execution by the producer-repair author; not a fresh independent review of the producer source."
+}

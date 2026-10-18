@@ -59,6 +59,9 @@ The [npm publication contract](docs/adr/0001-authenticated-npm-publication.md)
 describes authenticated release inputs, exact package selection and ordered OIDC
 publication. Its verification receipt distinguishes controlled tests from an
 actual release or npm publish.
+The [v1.5.1 publication receipt](docs/verification/SYN-343-published/README.md)
+records the actual signed artifacts, five registry packages and the host launcher
+check, with explicit platform and provenance limits.
 
 <a id="one-liner-macos-linux"></a>
 
