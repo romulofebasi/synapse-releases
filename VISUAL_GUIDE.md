@@ -46,6 +46,7 @@ SVG source remains editable, with title/description, readable text and a viewBox
 | :-- | :-- |
 | [memory-foundation.svg](assets/diagrams/memory-foundation.svg) | [memory-foundation-mobile.svg](assets/diagrams/memory-foundation-mobile.svg) |
 | [release-trust.svg](assets/diagrams/release-trust.svg) | [release-trust-mobile.svg](assets/diagrams/release-trust-mobile.svg) |
+| [npm-publication.svg](assets/diagrams/npm-publication.svg) | [npm-publication-mobile.svg](assets/diagrams/npm-publication-mobile.svg) |
 
 ## Maintenance and review
 
@@ -69,3 +70,11 @@ installer progression. Signature verification and the selected archive checksum 
 if either check is missing or fails, stop that manual workflow. The convenience installer's
 best-effort behavior remains separate and unchanged. The mobile variant preserves the same
 sequence and stop condition.
+
+The npm publication pair illustrates [ADR 0001](docs/adr/0001-authenticated-npm-publication.md).
+Arrows are conditional on each preceding gate passing: stable tag, exact-tag
+signature, complete signed inventory, safe binary selection, all five registry
+classifications and ordered publication. Existing versions remain untouched;
+failure stops subsequent work. This is a contract diagram, not evidence that a
+particular release or npm publication has executed. Its ADR supplies alt text and
+the complete prose equivalent. The installer remains a separate best-effort path.

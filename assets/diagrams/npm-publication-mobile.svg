@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="375" height="1640" viewBox="0 0 375 1640" role="img" aria-labelledby="title desc">
+<title id="title">Authenticated npm publication topology</title>
+<desc id="desc">A stable tag selects assets. Exact-tag Sigstore verification precedes a five-entry signed manifest and seven-asset inventory. All four safe binary selections precede all five npm registry classifications. Missing platforms publish before the missing launcher using OIDC. A failed gate stops further work and existing versions remain.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#5B3EE0"/></marker></defs>
+<rect width="375" height="1640" rx="22" fill="#F6F4EF"/>
+<g font-family="Arial, Helvetica, sans-serif">
+<text x="24" y="37" font-size="12" fill="#5B3EE0" font-weight="700">SYNAPSE / PUBLICATION</text>
+<text x="24" y="79" font-size="27" fill="#1A1A1A" font-weight="700">Authenticate first.</text>
+<text x="24" y="112" font-size="25" fill="#1A1A1A" font-weight="700">Publish selected bytes.</text>
+<text x="24" y="145" font-size="15" fill="#5F596B" font-weight="400">Every arrow requires a passing gate.</text>
+<rect x="24" y="177" width="327" height="176" rx="14" fill="#FFFFFF" stroke="#D5CFE5" stroke-width="1.5"/>
+<text x="44" y="206" font-size="12" fill="#5B3EE0" font-weight="700">01 / SELECT</text>
+<text x="44" y="242" font-size="18" fill="#1A1A1A" font-weight="700">Pin a stable tag</text>
+<text x="44" y="276" font-size="15" fill="#5F596B" font-weight="400">Literal vMAJOR.MINOR.PATCH</text>
+<text x="44" y="301" font-size="15" fill="#5F596B" font-weight="400">Fresh release download</text>
+<text x="44" y="326" font-size="15" fill="#5F596B" font-weight="400">No downloaded binary execution</text>
+<path d="M187.5 353 V382" fill="none" stroke="#5B3EE0" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="24" y="382" width="327" height="176" rx="14" fill="#FFFFFF" stroke="#D5CFE5" stroke-width="1.5"/>
+<text x="44" y="411" font-size="12" fill="#5B3EE0" font-weight="700">02 / AUTHENTICATE</text>
+<text x="44" y="447" font-size="18" fill="#1A1A1A" font-weight="700">Exact-tag Sigstore identity</text>
+<text x="44" y="481" font-size="15" fill="#5F596B" font-weight="400">Product release workflow + tag</text>
+<text x="44" y="506" font-size="15" fill="#5F596B" font-weight="400">GitHub Actions OIDC issuer</text>
+<text x="44" y="531" font-size="15" fill="#5F596B" font-weight="400">Require manifest verification</text>
+<path d="M187.5 558 V587" fill="none" stroke="#5B3EE0" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="24" y="587" width="327" height="176" rx="14" fill="#FFFFFF" stroke="#D5CFE5" stroke-width="1.5"/>
+<text x="44" y="616" font-size="12" fill="#5B3EE0" font-weight="700">03 / MATCH</text>
+<text x="44" y="652" font-size="18" fill="#1A1A1A" font-weight="700">5 signed entries / 7 assets</text>
+<text x="44" y="686" font-size="15" fill="#5F596B" font-weight="400">Four archives + source receipt</text>
+<text x="44" y="711" font-size="15" fill="#5F596B" font-weight="400">Manifest + signature bundle</text>
+<text x="44" y="736" font-size="15" fill="#5F596B" font-weight="400">Exact digests and source binding</text>
+<path d="M187.5 763 V792" fill="none" stroke="#5B3EE0" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="24" y="792" width="327" height="176" rx="14" fill="#FFFFFF" stroke="#D5CFE5" stroke-width="1.5"/>
+<text x="44" y="821" font-size="12" fill="#5B3EE0" font-weight="700">04 / PREPARE</text>
+<text x="44" y="857" font-size="18" fill="#1A1A1A" font-weight="700">Select four binaries safely</text>
+<text x="44" y="891" font-size="15" fill="#5F596B" font-weight="400">Inspect every archive first</text>
+<text x="44" y="916" font-size="15" fill="#5F596B" font-weight="400">Exact members and changelog</text>
+<text x="44" y="941" font-size="15" fill="#5F596B" font-weight="400">Prepare version-bound launcher</text>
+<path d="M187.5 968 V997" fill="none" stroke="#5B3EE0" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="24" y="997" width="327" height="176" rx="14" fill="#FFFFFF" stroke="#D5CFE5" stroke-width="1.5"/>
+<text x="44" y="1026" font-size="12" fill="#5B3EE0" font-weight="700">05 / CLASSIFY</text>
+<text x="44" y="1062" font-size="18" fill="#1A1A1A" font-weight="700">Query all five npm versions</text>
+<text x="44" y="1096" font-size="15" fill="#5F596B" font-weight="400">Exact existing version: preserve</text>
+<text x="44" y="1121" font-size="15" fill="#5F596B" font-weight="400">Structured E404: missing</text>
+<text x="44" y="1146" font-size="15" fill="#5F596B" font-weight="400">Other response: stop</text>
+<path d="M187.5 1173 V1202" fill="none" stroke="#5B3EE0" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="24" y="1202" width="327" height="176" rx="14" fill="#FFFFFF" stroke="#D5CFE5" stroke-width="1.5"/>
+<text x="44" y="1231" font-size="12" fill="#5B3EE0" font-weight="700">06 / PUBLISH</text>
+<text x="44" y="1267" font-size="18" fill="#1A1A1A" font-weight="700">Missing platforms, then launcher</text>
+<text x="44" y="1301" font-size="15" fill="#5F596B" font-weight="400">OIDC + provenance</text>
+<text x="44" y="1326" font-size="15" fill="#5F596B" font-weight="400">Public access; ignore scripts</text>
+<text x="44" y="1351" font-size="15" fill="#5F596B" font-weight="400">Stop after a publication failure</text>
+<rect x="24" y="1433" width="327" height="173" rx="14" fill="#FFB454"/>
+<text x="44" y="1463" font-size="12" fill="#1A1A1A" font-weight="700">FAILURE STOPS FURTHER WORK</text>
+<text x="44" y="1497" font-size="15" fill="#1A1A1A" font-weight="400">Existing versions stay untouched.</text>
+<text x="44" y="1523" font-size="15" fill="#1A1A1A" font-weight="400">Earlier successful publishes remain.</text>
+<text x="44" y="1560" font-size="15" fill="#1A1A1A" font-weight="400">Fixture tests use recording tools.</text>
+<text x="44" y="1586" font-size="15" fill="#1A1A1A" font-weight="400">Real publication needs separate proof.</text>
+</g></svg>

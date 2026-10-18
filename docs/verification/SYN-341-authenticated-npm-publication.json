@@ -1,0 +1,41 @@
+{
+  "schema": "synapse.authenticated-npm-publication/1",
+  "source": "f142eb5a5f22442020a84fa5929eee2fe7954881",
+  "originalRedSource": "317d6cd6fc3de7d2972a36e1db2cf6287a7aee1c",
+  "sourceSHA256": {
+    "scripts/publish-npm.py": "a968ca1e4278d96867d330bd3e958d0ca36d7511fd3983668502e31780484edc",
+    "scripts/check-npm-publish-tests.py": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+    ".github/workflows/npm-publish.yml": "b0c8c9aecc56a6cf103838db2f748a32b9cc65385e14071381a1dfd877f7023e",
+    ".github/workflows/ci.yml": "8df49f84117550926469e40d7ca97251e0bd5e49962c26e03d06850f3843c82b"
+  },
+  "originalRed": {
+    "methods": 1,
+    "assertionFailures": 1,
+    "errors": 0,
+    "result": "assertion RED",
+    "observation": "An invalid stable-tag input did not stop the original publication path before release download. Raw characterization output remains private; committed tests use only synthetic owned-fixture inputs.",
+    "rawLogSHA256": "3cf25020dbdebb3f56ba4ff4f47eee7447bae775bddef2de1cd94e3c499c82ab"
+  },
+  "authorGreen": {
+    "command": "python3 scripts/check-npm-publish-tests.py -v",
+    "methods": 16,
+    "failures": 0,
+    "errors": 0,
+    "durationSeconds": 9.59,
+    "result": "GREEN with recording external-tool fakes",
+    "rawLogSHA256": "91e4fa7ccae55033cab5abea72edbdb7ba6c1ec036fc958419358309d566957b"
+  },
+  "fixtureBoundaries": [
+    "Actual helper and workflow steps execute against private temporary assets.",
+    "gh, cosign and npm are recording fakes. No real signature verification or registry publication is established.",
+    "No downloaded product binary is executed by assembly fixtures."
+  ],
+  "pending": [
+    "Independent executed mutation review of this frozen source and tests.",
+    "Exact final-head CI.",
+    "Actual tagged release signature, platform build and npm publication evidence after the existing review gates."
+  ],
+  "historicalAssets": "Existing v1.4 assets lack the new source receipt and cannot rerun the hardened workflow unchanged.",
+  "installer": "Unchanged best-effort verification.",
+  "privacy": "Raw logs and private run artifacts remain private. Committed tests contain synthetic owned-fixture inputs, without account credentials or production data."
+}

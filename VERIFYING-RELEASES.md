@@ -61,3 +61,19 @@ The current [installer](install.sh) is **best-effort**, rather than the strict m
 | cosign or bundle is unavailable | Signature verification can be skipped. |
 
 Review the script before executing it. Setting `SYNAPSE_VERSION` pins the requested tag, but does not make these optional checks mandatory. Use the explicit manual workflow when both checks are required by your installation policy. This documentation update does not change the installer.
+
+## npm publication is a separate boundary
+
+The [authenticated npm publication decision](docs/adr/0001-authenticated-npm-publication.md)
+requires an exact-tag Sigstore identity, a signed five-entry manifest and complete
+seven-asset inventory before selecting the four companion binaries. The workflow
+classifies all five package versions before any publish, preserves existing
+versions, then publishes missing companions before the missing launcher through
+npm trusted publishing. A registry lookup failure is not confirmed absence.
+
+Historical v1.4 assets lack the new source receipt and cannot rerun this hardened
+path unchanged. Neither a prepared package nor the controlled fixture suite proves
+an actual release signature or registry publication. The [evidence receipt](docs/verification/SYN-341-authenticated-npm-publication.json)
+retains the original source and verification limits. Contributors can reproduce
+the recording-tool suite with `python3 scripts/check-npm-publish-tests.py -v`,
+following the [Febasi test-first standard](https://github.com/romulofebasi/febasi-standards/blob/main/skills/test-first/SKILL.md).

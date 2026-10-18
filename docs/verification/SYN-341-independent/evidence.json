@@ -1,0 +1,1060 @@
+{
+  "schema": "syn341.independent-adversarial-review/1",
+  "requirement": "https://github.com/romulofebasi/synapse/issues/345",
+  "original_source": "f142eb5a5f22442020a84fa5929eee2fe7954881",
+  "corrective_source_commit": "43f716d4b5ea9081e6e9a9cdf5f358dd33d4021f",
+  "corrected_helper_sha256": "4acf471b3e3776660742aa97a4f51caef3506941dd12e2bc8901eac4d2d3d7f7",
+  "regression_test_commit": "6f50224",
+  "strengthened_test_commit": "2999ca3",
+  "workflow_sha256": "b0c8c9aecc56a6cf103838db2f748a32b9cc65385e14071381a1dfd877f7023e",
+  "original_test_sha256": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+  "pristine_regressions": {
+    "methods": 2,
+    "failures": 2,
+    "errors": 0,
+    "expected_exit": 1,
+    "observed_exit": 0,
+    "observed_recording_publications_per_case": 5,
+    "findings": [
+      "A ZIP original filename with an embedded NUL normalized to the allowed binary filename.",
+      "A ZIP member with directory Unix type and a file-style name was selected as the regular binary."
+    ],
+    "log_sha256": "017663ffac1102a18a518439da0a8e2ed0937b4f0da39ec387a7cd251afc1b61",
+    "typed_sha256": "ef16a687c5e8fdfa9ce181cdb0fd0ba85885ba7006af74d8f54aee2dde3af75b",
+    "original_regression_method_and_helper_text_preserved": true
+  },
+  "original_round": {
+    "baseline_methods": 16,
+    "baseline_exit_code": 0,
+    "baseline_seconds": 9.759821875020862,
+    "mutants": 25,
+    "assertion_kills": 13,
+    "survivors": 9,
+    "invalid": 3,
+    "restored_methods": 16,
+    "restored_exit_code": 0,
+    "matrix": [
+      {
+        "name": "M01-tag-admitted-without-validation",
+        "verdict": "assertion-killed",
+        "methods": 16,
+        "exit_code": 1,
+        "seconds": 9.811,
+        "log_sha256": "1feaae686acb00994afc2fdccce0b41faa3c52aaeb6fda22582ca6c7dbf4a921",
+        "patch_sha256": "44319238a37b2bac7e93f938446a12e7d42783af8a12f42951dce4c489a8aa03",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -35,8 +35,7 @@\n \n \n def version(tag):\n-    require(isinstance(tag, str) and len(tag) <= 64 and re.fullmatch(\n-        r'v(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)', tag), 'invalid-tag')\n+    require(isinstance(tag, str), 'invalid-tag')\n     return tag[1:]\n \n \n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_hostile_tag_is_rejected_before_download_or_shell_side_effect",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 == 0"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M02-tag-size-unbounded",
+        "verdict": "survived",
+        "methods": 16,
+        "exit_code": 0,
+        "seconds": 10.117,
+        "log_sha256": "cc6098822dd47e3241f1db36947cc3ae51731f35ff4d590e6a0a27b1f148466f",
+        "patch_sha256": "1fe312f77ec33a4fdcba21e8d663ecf0ef6ec953fca2854182c26e645dfc2366",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -35,7 +35,7 @@\n \n \n def version(tag):\n-    require(isinstance(tag, str) and len(tag) <= 64 and re.fullmatch(\n+    require(isinstance(tag, str) and re.fullmatch(\n         r'v(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)', tag), 'invalid-tag')\n     return tag[1:]\n \n",
+        "assertions": [],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M03-ignore-signature-failure",
+        "verdict": "assertion-killed",
+        "methods": 16,
+        "exit_code": 1,
+        "seconds": 9.938,
+        "log_sha256": "8dd1093ecc8e1da4e29c7637f37a19dcde7b05e861e12b0ea237f4c49ff6cf16",
+        "patch_sha256": "c6bee89d99f711aa010d0d255945aa987f8d231f6f5d92f2a9b476b40de767b7",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -167,7 +167,7 @@\n         verified = run(['cosign', 'verify-blob', '--bundle', str(directory / 'SHA256SUMS.cosign.bundle'),\n                         '--certificate-identity', signature_identity, '--certificate-oidc-issuer', ISSUER,\n                         str(directory / 'SHA256SUMS')])\n-        require(verified.returncode == 0, 'signature-verification-failed')\n+        require(True, 'signature-verification-failed')\n         unchanged()\n         checksums = ''.join(f'{sha(streams[name])}  {name}\\n' for name in sorted(signed))\n         require(streams['SHA256SUMS'].read() == checksums.encode(), 'signed-checksum-mismatch')\n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_signature_failure_prevents_packages_registry_and_publication",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M04-signing-source-is-mirror",
+        "verdict": "assertion-killed",
+        "methods": 16,
+        "exit_code": 1,
+        "seconds": 9.158,
+        "log_sha256": "9e4fda4b8cdfca8894cca8705375ab285895b5a434a31a66d2f5400f0a59c168",
+        "patch_sha256": "6423365c1556762cbe82986512f178d0ac608de94d0a9942f38b602a47b3529b",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -12,7 +12,7 @@\n import tarfile\n import zipfile\n \n-SOURCE = 'romulofebasi/synapse'\n+SOURCE = 'romulofebasi/synapse-releases'\n MIRROR = 'romulofebasi/synapse-releases'\n ISSUER = 'https://token.actions.githubusercontent.com'\n PLATFORMS = (\n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_authenticated_four_platform_bytes_and_launcher_are_prepared_without_execution",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 'http[29 chars]ynapse-releases/.github/workflows/release.yml@refs/tags/v1.5.0' != 'http[29 chars]ynapse/.github/workflows/release.yml@refs/tags/v1.5.0'"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M05-certificate-tag-is-another-release",
+        "verdict": "assertion-killed",
+        "methods": 16,
+        "exit_code": 1,
+        "seconds": 9.928,
+        "log_sha256": "7b4334555b12968ba6f3f5d36f20dc432362f78819b0a23db3f038a748d4ed12",
+        "patch_sha256": "441dd3b846d4a3e50788da32ec2f26e865d910a47c1f045c406a1d82b772d6fd",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -163,7 +163,7 @@\n             require(all(identity(os.stat(directory / name, follow_symlinks=False)) == frozen[name]\n                         and identity(os.fstat(stream.fileno())) == frozen[name]\n                         for name, stream in streams.items()), 'release-input-changed')\n-        signature_identity = f'https://github.com/{SOURCE}/.github/workflows/release.yml@refs/tags/{tag}'\n+        signature_identity = f'https://github.com/{SOURCE}/.github/workflows/release.yml@refs/tags/v1.5.1'\n         verified = run(['cosign', 'verify-blob', '--bundle', str(directory / 'SHA256SUMS.cosign.bundle'),\n                         '--certificate-identity', signature_identity, '--certificate-oidc-issuer', ISSUER,\n                         str(directory / 'SHA256SUMS')])\n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_authenticated_four_platform_bytes_and_launcher_are_prepared_without_execution",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 'http[20 chars]ofebasi/synapse/.github/workflows/release.yml@refs/tags/v1.5.1' != 'http[20 chars]ofebasi/synapse/.github/workflows/release.yml@refs/tags/v1.5.0'"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M06-issuer-is-not-github",
+        "verdict": "assertion-killed",
+        "methods": 16,
+        "exit_code": 1,
+        "seconds": 9.427,
+        "log_sha256": "e1f5d0cad0245f6cd21ec394a9ec3ee197a079ddcd7eeb9d2e4add5d7cf58943",
+        "patch_sha256": "61aca5acc7d7e5458fd9e3e54395debcbf5f3760c6a07632f0e1f130706f6ab1",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -14,7 +14,7 @@\n \n SOURCE = 'romulofebasi/synapse'\n MIRROR = 'romulofebasi/synapse-releases'\n-ISSUER = 'https://token.actions.githubusercontent.com'\n+ISSUER = 'https://issuer.invalid.example'\n PLATFORMS = (\n     ('darwin', 'arm64', 'aarch64-apple-darwin', 'tar.gz', 'syn'),\n     ('linux', 'x64', 'x86_64-unknown-linux-gnu', 'tar.gz', 'syn'),\n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_authenticated_four_platform_bytes_and_launcher_are_prepared_without_execution",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 'https://issuer.invalid.example' != 'https://token.actions.githubusercontent.com'"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M07-ignore-signed-archive-hash",
+        "verdict": "assertion-killed",
+        "methods": 16,
+        "exit_code": 1,
+        "seconds": 9.805,
+        "log_sha256": "34e0949396b68e0a6597e7660ae6902d1a2e79803866c9c6da4b4dc2d991c899",
+        "patch_sha256": "b17a0270f2f278a396357127d5839a4a1908303136f9f62736077f139ee3de18",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -170,7 +170,7 @@\n         require(verified.returncode == 0, 'signature-verification-failed')\n         unchanged()\n         checksums = ''.join(f'{sha(streams[name])}  {name}\\n' for name in sorted(signed))\n-        require(streams['SHA256SUMS'].read() == checksums.encode(), 'signed-checksum-mismatch')\n+        require(True, 'signed-checksum-mismatch')\n         source = receipt(document(streams['release-metadata.json'].read()), tag)\n         descriptors = []\n         for system, cpu, target, suffix, binary in PLATFORMS:\n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_fourth_archive_tamper_is_detected_before_any_registry_call",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M08-receipt-is-not-covered-by-hash",
+        "verdict": "survived",
+        "methods": 16,
+        "exit_code": 0,
+        "seconds": 8.893,
+        "log_sha256": "3094ae9515a13e2795660dd6a5fe1afedf53da518b96a2728fcf065f6a723958",
+        "patch_sha256": "440216ab96f729c246938f85b1925c746846b25d3ef16ddb12d7a1cfb2e4c6c6",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -170,7 +170,7 @@\n         require(verified.returncode == 0, 'signature-verification-failed')\n         unchanged()\n         checksums = ''.join(f'{sha(streams[name])}  {name}\\n' for name in sorted(signed))\n-        require(streams['SHA256SUMS'].read() == checksums.encode(), 'signed-checksum-mismatch')\n+        require([x for x in streams['SHA256SUMS'].read().splitlines() if not x.endswith(b'  release-metadata.json')] == [x for x in checksums.encode().splitlines() if not x.endswith(b'  release-metadata.json')], 'signed-checksum-mismatch')\n         source = receipt(document(streams['release-metadata.json'].read()), tag)\n         descriptors = []\n         for system, cpu, target, suffix, binary in PLATFORMS:\n",
+        "assertions": [],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M09-duplicate-manifest-lines-admitted",
+        "verdict": "survived",
+        "methods": 16,
+        "exit_code": 0,
+        "seconds": 9.282,
+        "log_sha256": "be4bc23618513bd56248a4266b31717119b5b87bb34102687fcd86aebe519b31",
+        "patch_sha256": "bc3081ce5e0dbe9bdb93624a77328eec336b79eea470ed398e00a6703d702ba6",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -170,7 +170,7 @@\n         require(verified.returncode == 0, 'signature-verification-failed')\n         unchanged()\n         checksums = ''.join(f'{sha(streams[name])}  {name}\\n' for name in sorted(signed))\n-        require(streams['SHA256SUMS'].read() == checksums.encode(), 'signed-checksum-mismatch')\n+        require(set(streams['SHA256SUMS'].read().splitlines()) == set(checksums.encode().splitlines()), 'signed-checksum-mismatch')\n         source = receipt(document(streams['release-metadata.json'].read()), tag)\n         descriptors = []\n         for system, cpu, target, suffix, binary in PLATFORMS:\n",
+        "assertions": [],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M10-receipt-may-name-another-tag",
+        "verdict": "assertion-killed",
+        "methods": 16,
+        "exit_code": 1,
+        "seconds": 9.752,
+        "log_sha256": "2d689b9a013e21a630123810069090ed03a404bd503cfa3061780851c27c3536",
+        "patch_sha256": "3466ea6b6137a0771b61a67943ec9e13e2edef460b7cd9a363660186592826a9",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -98,8 +98,7 @@\n \n def receipt(data, tag):\n     require(isinstance(data, dict) and set(data) == {'schemaVersion', 'tag', 'version', 'commit', 'inputs', 'notesSHA256'}, 'invalid-source-receipt')\n-    require(type(data['schemaVersion']) is int and data['schemaVersion'] == 1 and data['tag'] == tag\n-            and data['version'] == version(tag), 'source-receipt-tag-mismatch')\n+    require(type(data['schemaVersion']) is int and data['schemaVersion'] == 1, 'source-receipt-tag-mismatch')\n     require(isinstance(data['commit'], str) and re.fullmatch(r'[0-9a-f]{40}|[0-9a-f]{64}', data['commit']), 'invalid-source-commit')\n     inputs = data['inputs']\n     require(isinstance(inputs, dict) and set(inputs) == {'Cargo.toml', 'Cargo.lock', 'CHANGELOG.md'}, 'invalid-source-inputs')\n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_signed_source_receipt_cannot_select_another_tag",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M11-malformed-source-digests-admitted",
+        "verdict": "survived",
+        "methods": 16,
+        "exit_code": 0,
+        "seconds": 9.741,
+        "log_sha256": "03c9423beab2942ff4a3ca2f57bc112bd4edcbbe85e3922d33214199111e00db",
+        "patch_sha256": "d737c2d6c8d842ae6e55175769d0a41e409c59f5cb18b544a1144e8aab1c7d59",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -103,8 +103,7 @@\n     require(isinstance(data['commit'], str) and re.fullmatch(r'[0-9a-f]{40}|[0-9a-f]{64}', data['commit']), 'invalid-source-commit')\n     inputs = data['inputs']\n     require(isinstance(inputs, dict) and set(inputs) == {'Cargo.toml', 'Cargo.lock', 'CHANGELOG.md'}, 'invalid-source-inputs')\n-    require(all(isinstance(v, str) and re.fullmatch(r'[0-9a-f]{64}', v)\n-                for v in [*inputs.values(), data['notesSHA256']]), 'invalid-source-digest')\n+    require(True, 'invalid-source-digest')\n     return data\n \n \n",
+        "assertions": [],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M12-zip-links-admitted",
+        "verdict": "survived",
+        "methods": 16,
+        "exit_code": 0,
+        "seconds": 8.976,
+        "log_sha256": "8c49423beef6f22a88a2d8631c938f483609d0f6e7a9dae0d5b64e9f62390e0d",
+        "patch_sha256": "dc6b3992187af2ae46ca9c28d583531545272a6759344ac90781b97befae3f9d",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -113,8 +113,7 @@\n         archive = stack.enter_context(zipfile.ZipFile(stream))\n         members = archive.infolist()\n         names = [(m.filename, m.is_dir(), m.file_size, m) for m in members]\n-        require(all((stat.S_IFMT(m.external_attr >> 16) in (0, stat.S_IFREG, stat.S_IFDIR))\n-                    and not m.flag_bits & 1 for m in members), 'unsafe-archive-member')\n+        require(True, 'unsafe-archive-member')\n         opener = lambda member: archive.open(member)\n     else:\n         archive = stack.enter_context(tarfile.open(fileobj=stream, mode='r:gz'))\n",
+        "assertions": [],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M13-duplicate-member-overwrites-selection",
+        "verdict": "survived",
+        "methods": 16,
+        "exit_code": 0,
+        "seconds": 9.061,
+        "log_sha256": "72337afb3a98f2119dd66832e06f6ab0d0726e7a7a772a8f9d6b279995d138e7",
+        "patch_sha256": "3df35e3621caf5f64a78dae7f77ae176d7ab856cde68f1497f92b576ad51b692",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -127,7 +127,7 @@\n     seen, files = set(), {}\n     for name, directory, size, member in names:\n         canonical = name.rstrip('/')\n-        require(canonical not in seen, 'duplicate-archive-member')\n+        require(True, 'duplicate-archive-member')\n         seen.add(canonical)\n         if directory:\n             require(canonical == prefix, 'unsafe-archive-directory')\n",
+        "assertions": [],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M14-select-binary-by-basename",
+        "verdict": "survived",
+        "methods": 16,
+        "exit_code": 0,
+        "seconds": 9.069,
+        "log_sha256": "0548461346de50b2961c77cfd5937fe1bcdde4030dfcabc006b8fb94ee2278e1",
+        "patch_sha256": "d2a7269b57c0aa1bb2afab3ebec349d3b6432b3970812380266abff088cf4205",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -132,8 +132,8 @@\n         if directory:\n             require(canonical == prefix, 'unsafe-archive-directory')\n         else:\n-            require(name in allowed and 0 < size <= (MAX_ARCHIVE if name.endswith('/' + binary) else MAX_TEXT), 'unexpected-archive-member')\n-            files[name] = member\n+            require(name.rsplit('/', 1)[-1] in {binary, 'README.md', 'LICENSE', 'CHANGELOG.md'} and 0 < size <= (MAX_ARCHIVE if name.endswith('/' + binary) else MAX_TEXT), 'unexpected-archive-member')\n+            files[prefix + '/' + name.rsplit('/', 1)[-1]] = member\n     require(set(files) == allowed, 'missing-archive-member')\n     with opener(files[prefix + '/CHANGELOG.md']) as changelog:\n         require(hashlib.sha256(changelog.read(MAX_TEXT + 1)).hexdigest() == changelog_digest, 'archive-changelog-mismatch')\n",
+        "assertions": [],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M15-ignore-archive-changelog-evidence",
+        "verdict": "assertion-killed",
+        "methods": 16,
+        "exit_code": 1,
+        "seconds": 10.333,
+        "log_sha256": "b7a9480af438aa3578e1ee0b01eb66d65d094b32643c6a4382975a08e06994f5",
+        "patch_sha256": "3a332ca391d87ed25ae837e53f90d0bf9b8af413d85f315136bb91ba18d769ed",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -136,7 +136,7 @@\n             files[name] = member\n     require(set(files) == allowed, 'missing-archive-member')\n     with opener(files[prefix + '/CHANGELOG.md']) as changelog:\n-        require(hashlib.sha256(changelog.read(MAX_TEXT + 1)).hexdigest() == changelog_digest, 'archive-changelog-mismatch')\n+        require(True, 'archive-changelog-mismatch')\n     return opener, files[prefix + '/' + binary]\n \n \n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_signed_archive_changelog_matches_committed_source_receipt",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M16-ignore-input-identity-replacement",
+        "verdict": "assertion-killed",
+        "methods": 16,
+        "exit_code": 1,
+        "seconds": 9.417,
+        "log_sha256": "3fab74c3756ee9b638c783574b4c6918579321eade0016901b72302d88fe64c3",
+        "patch_sha256": "4e0bc5dd20b9e62b63e92406dfbc165336a5a363d3c5e95d2c3440272758040f",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -160,9 +160,7 @@\n             return info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns, info.st_ctime_ns\n         frozen = {name: identity(os.fstat(stream.fileno())) for name, stream in streams.items()}\n         def unchanged():\n-            require(all(identity(os.stat(directory / name, follow_symlinks=False)) == frozen[name]\n-                        and identity(os.fstat(stream.fileno())) == frozen[name]\n-                        for name, stream in streams.items()), 'release-input-changed')\n+            require(True, 'release-input-changed')\n         signature_identity = f'https://github.com/{SOURCE}/.github/workflows/release.yml@refs/tags/{tag}'\n         verified = run(['cosign', 'verify-blob', '--bundle', str(directory / 'SHA256SUMS.cosign.bundle'),\n                         '--certificate-identity', signature_identity, '--certificate-oidc-issuer', ISSUER,\n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_replaced_manifest_during_signature_check_is_not_the_selected_file",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M17-registry-auth-errors-imply-absent",
+        "verdict": "invalid",
+        "methods": 16,
+        "exit_code": 1,
+        "seconds": 8.749,
+        "log_sha256": "f885bf2a6305c7b67a0c28aacf237d66114bf98245c69e3a6773d302a9cca351",
+        "patch_sha256": "84fa702eed0a55b241986100af5df2e8df568796aebedde658fdb711bde1fbc0",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -225,7 +225,7 @@\n         return True\n     response = document(result.stdout.strip() or result.stderr)\n     require(isinstance(response, dict) and isinstance(response.get('error'), dict)\n-            and response['error'].get('code') == 'E404', 'registry-query-failed')\n+            and response['error'].get('code') in ('E404', 'E401', 'E403', 'E500'), 'registry-query-failed')\n     return False\n \n \n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_registry_errors_cannot_mean_absent_or_cause_partial_publication",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          }
+        ],
+        "error_types": [
+          "builtins.FileExistsError"
+        ],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M18-lazy-registry-queries-interleave-publication",
+        "verdict": "invalid",
+        "methods": 16,
+        "exit_code": 1,
+        "seconds": 8.148,
+        "log_sha256": "7a82098f1a66c3c6d344ab21fb85c6c40d3e968d1ddb767247f3152700e3934c",
+        "patch_sha256": "e981e48867e131f869a018b0eb2c153f6ddc9da6ff4e9f255dc1314937d79ea5",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -235,7 +235,7 @@\n     npm = run(['npm', '--version'])\n     require(npm.returncode == 0 and re.fullmatch(r'[0-9]+\\.[0-9]+\\.[0-9]+', npm.stdout.strip())\n             and tuple(map(int, npm.stdout.strip().split('.'))) >= (11, 5, 1), 'unsupported-npm-version')\n-    pending = [(path, name) for path, name in packages if not registry_exists(name, selected)]\n+    pending = ((path, name) for path, name in packages if not registry_exists(name, selected))\n     for path, name in pending:\n         require(run(['npm', 'publish', '--provenance', '--access', 'public', '--ignore-scripts'], cwd=path).returncode == 0,\n                 'npm-publication-failed')\n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_confirmed_absence_publishes_exact_packages_then_launcher_with_provenance",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: False is not true"
+          }
+        ],
+        "error_types": [
+          "builtins.FileExistsError",
+          "json.decoder.JSONDecodeError"
+        ],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M19-publish-already-existing-versions",
+        "verdict": "assertion-killed",
+        "methods": 16,
+        "exit_code": 1,
+        "seconds": 9.073,
+        "log_sha256": "c541279ac1178109bd231fe27acc386c7b4905aa48ad6aa3815ce3e94586214e",
+        "patch_sha256": "329df1d21efc295ac6fd81692d417d60fd2df8e90c5a659b10ba197c59beaf56",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -222,7 +222,7 @@\n     result = run(['npm', 'view', f'{name}@{selected}', 'version', '--json'])\n     if result.returncode == 0:\n         require(document(result.stdout) == selected, 'unexpected-registry-version')\n-        return True\n+        return False\n     response = document(result.stdout.strip() or result.stderr)\n     require(isinstance(response, dict) and isinstance(response.get('error'), dict)\n             and response['error'].get('code') == 'E404', 'registry-query-failed')\n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_existing_versions_are_preserved_and_all_registry_queries_precede_publication",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: [{'tool': 'npm', 'args': ['publish', '--provenance', '--access', 'public', '--ignore-scripts'], 'cwd': '/private/var/folders/1k/cnq4g32d3qv8_ccj8cxzmhs00000gq/T/syn341-npm-test-h20jt2qz/prepared/darwin-arm64'}, {'tool': 'npm', 'args': ['publish', '--provenance', '--access', 'public', '--ignore-scripts'], 'cwd': '/private/var/folders/1k/cnq4g32d3qv8_ccj8cxzmhs00000gq/T/syn341-npm-test-h20jt2qz/prepared/linux-x64'}, {'tool': 'npm', 'args': ['publish', '--provenance', '--access', 'public', '--ignore-scripts'], 'cwd': '/private/var/folders/1k/cnq4g32d3qv8_ccj8cxzmhs00000gq/T/syn341-npm-test-h20jt2qz/prepared/linux-arm64'}, {'tool': 'npm', 'args': ['publish', '--provenance', '--access', 'public', '--ignore-scripts'], 'cwd': '/private/var/folders/1k/cnq4g32d3qv8_ccj8cxzmhs00000gq/T/syn341-npm-test-h20jt2qz/prepared/win32-x64'}, {'tool': 'npm', 'args': ['publish', '--provenance', '--access', 'public', '--ignore-scripts'], 'cwd': '/private/var/folders/1k/cnq4g32d3qv8_ccj8cxzmhs00000gq/T/syn341-npm-test-h20jt2qz/prepared/launcher'}] is not false"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M20-old-npm-is-admitted",
+        "verdict": "assertion-killed",
+        "methods": 16,
+        "exit_code": 1,
+        "seconds": 10.345,
+        "log_sha256": "56c8fa3629df4f71d5320f9232683ef21eaf78b4e615beab6749e431d0f631f4",
+        "patch_sha256": "380f8a24bef6d958f96cf55968da7c48589cfb0b226ab8628cac696784465c36",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -234,7 +234,7 @@\n     packages = prepare(tag, directory, output, launcher)\n     npm = run(['npm', '--version'])\n     require(npm.returncode == 0 and re.fullmatch(r'[0-9]+\\.[0-9]+\\.[0-9]+', npm.stdout.strip())\n-            and tuple(map(int, npm.stdout.strip().split('.'))) >= (11, 5, 1), 'unsupported-npm-version')\n+            and True, 'unsupported-npm-version')\n     pending = [(path, name) for path, name in packages if not registry_exists(name, selected)]\n     for path, name in pending:\n         require(run(['npm', 'publish', '--provenance', '--access', 'public', '--ignore-scripts'], cwd=path).returncode == 0,\n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_unsupported_npm_version_stops_before_registry_or_publish",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M21-publication-without-provenance",
+        "verdict": "assertion-killed",
+        "methods": 16,
+        "exit_code": 1,
+        "seconds": 9.866,
+        "log_sha256": "6461cda2f6196090f948651553850df37ee92d48834d0d3b1e6ab39ad0134e09",
+        "patch_sha256": "b6c3694377df0e226ab5d333cd617c93d9c544c56f7406236bc120a4b080b7ba",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -237,7 +237,7 @@\n             and tuple(map(int, npm.stdout.strip().split('.'))) >= (11, 5, 1), 'unsupported-npm-version')\n     pending = [(path, name) for path, name in packages if not registry_exists(name, selected)]\n     for path, name in pending:\n-        require(run(['npm', 'publish', '--provenance', '--access', 'public', '--ignore-scripts'], cwd=path).returncode == 0,\n+        require(run(['npm', 'publish', '--access', 'public', '--ignore-scripts'], cwd=path).returncode == 0,\n                 'npm-publication-failed')\n         print(json.dumps({'status': 'published', 'package': name, 'version': selected}))\n \n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_confirmed_absence_publishes_exact_packages_then_launcher_with_provenance",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: False is not true"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M22-wrong-platform-package-version",
+        "verdict": "survived",
+        "methods": 16,
+        "exit_code": 0,
+        "seconds": 9.766,
+        "log_sha256": "62a5ee11bccd08bcca719e6bf8440fdb2a3ad866ffbec2ecc797a8fb4132056f",
+        "patch_sha256": "9cba9e55a4b6ed6d5cf91843b4aee050c75c856dd596dcb8db92d0c52506e0bf",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -190,7 +190,7 @@\n                     require(count <= MAX_ARCHIVE, 'expanded-binary-too-large')\n                     target.write(block)\n             (destination / binary).chmod(0o755)\n-            package = {'name': f'@febasi/synapse-{system}-{cpu}', 'version': selected,\n+            package = {'name': f'@febasi/synapse-{system}-{cpu}', 'version': '0.0.0',\n                        'description': f'Prebuilt syn binary for {system}-{cpu}. Companion to @febasi/synapse.',\n                        'license': 'MIT', 'os': [system], 'cpu': [cpu], 'files': [binary],\n                        'homepage': f'https://github.com/{MIRROR}',\n",
+        "assertions": [],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M23-wrong-launcher-package-version",
+        "verdict": "survived",
+        "methods": 16,
+        "exit_code": 0,
+        "seconds": 10.216,
+        "log_sha256": "6ac4f94cd91ee0f56535c2e12909aeef49584bb36c4c717dcf3a16f6a6ba778a",
+        "patch_sha256": "cdd0645b8755ae07449fc07e241e30628eda220f1877fd9551b3213d09cc59c5",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -209,7 +209,7 @@\n             for name in ('README.md', 'bin/syn.js'):\n                 (destination / name).write_bytes(regular(launcher_stack, launcher / name, MAX_TEXT).read())\n             (destination / 'bin/syn.js').chmod(0o755)\n-            package['version'] = selected\n+            package['version'] = '0.0.0'\n             package['optionalDependencies'] = {name: selected for _, name in packages}\n             write_json(destination / 'package.json', package)\n         packages.append((destination, '@febasi/synapse'))\n",
+        "assertions": [],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M24-workflow-reintroduces-shell-interpolation",
+        "verdict": "assertion-killed",
+        "methods": 16,
+        "exit_code": 1,
+        "seconds": 9.455,
+        "log_sha256": "abf48222021005cbed5eee01b35c09f5e9e9b03eddf42e873daae77f6e165e56",
+        "patch_sha256": "bbe7fd003ffe2bcff1c5770524dc740ff8dcf08f7bdae39d4a5f843d4eeded40",
+        "patch": "--- a/.github/workflows/npm-publish.yml\n+++ b/.github/workflows/npm-publish.yml\n@@ -43,9 +43,9 @@\n           GH_TOKEN: ${{ github.token }}\n           RELEASE_TAG: ${{ steps.v.outputs.tag }}\n         run: |\n-          python3 scripts/publish-npm.py download --tag \"$RELEASE_TAG\" --repository \"$GITHUB_REPOSITORY\"\n+          python3 scripts/publish-npm.py download --tag \"${{ steps.v.outputs.tag }}\" --repository \"$GITHUB_REPOSITORY\"\n       - name: assemble + publish (OIDC)\n         env:\n           RELEASE_TAG: ${{ steps.v.outputs.tag }}\n         run: |\n-          python3 scripts/publish-npm.py publish --tag \"$RELEASE_TAG\"\n+          python3 scripts/publish-npm.py publish --tag \"${{ steps.v.outputs.tag }}\"\n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_workflow_never_embeds_event_expressions_in_shell_source",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: '${{' unexpectedly found in '          python3 scripts/publish-npm.py download --tag \"${{ steps.v.outputs.tag }}\" --repository \"$GITHUB_REPOSITORY\"'"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      },
+      {
+        "name": "M25-extra-unsigned-release-assets-admitted",
+        "verdict": "invalid",
+        "methods": 16,
+        "exit_code": 1,
+        "seconds": 9.281,
+        "log_sha256": "d35607b4a22d7c5bb165df0b51ffc8e1a1f9e6fe5eb503050c2af72ff13d3969",
+        "patch_sha256": "b11993a870e5e1b818a6e05d7a06223187d6ec46a95bf7bce21f36fa29fee5b9",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -151,7 +151,7 @@\n     require(directory.is_dir() and not directory.is_symlink(), 'unsafe-download-directory')\n     archives = archive_names(tag)\n     signed = archives | {'release-metadata.json'}\n-    require({p.name for p in directory.iterdir()} == signed | {'SHA256SUMS', 'SHA256SUMS.cosign.bundle'}, 'incomplete-release-inventory')\n+    require(True, 'incomplete-release-inventory')\n     require(not os.path.lexists(output), 'package-destination-exists')\n     with ExitStack() as stack:\n         streams = {name: regular(stack, directory / name, MAX_ARCHIVE if name in archives else MAX_TEXT)\n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_missing_extra_and_symlink_assets_are_not_authenticated",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: {'status': 'rejected', 'reason': 'missing-or-unsafe-file'} != {'status': 'rejected', 'reason': 'incomplete-release-inventory'}"
+          }
+        ],
+        "error_types": [
+          "builtins.FileExistsError"
+        ],
+        "test_sha256_before": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857",
+        "test_sha256_after": "daa462d3c35af2df77bcad75e48ef1fc521af46b03fe08201c420e70c6633857"
+      }
+    ]
+  },
+  "strengthened_round": {
+    "methods_per_run": 30,
+    "original_gap_replays": 12,
+    "exact_original_patches": 11,
+    "adapted_zip_metadata_variant": 1,
+    "new_corrective_zip_variants": 3,
+    "assertion_kills": 15,
+    "survivors": 0,
+    "invalid": 0,
+    "matrix": [
+      {
+        "name": "R-M02-tag-size-unbounded",
+        "verdict": "assertion-killed",
+        "methods": 30,
+        "exit_code": 1,
+        "seconds": 23.958,
+        "log_sha256": "f2cf101ef3865de6eca14b0549f326f0c843c407b93043f1b71a0f0f4b5c4cfd",
+        "patch_sha256": "1fe312f77ec33a4fdcba21e8d663ecf0ef6ec953fca2854182c26e645dfc2366",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -35,7 +35,7 @@\n \n \n def version(tag):\n-    require(isinstance(tag, str) and len(tag) <= 64 and re.fullmatch(\n+    require(isinstance(tag, str) and re.fullmatch(\n         r'v(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)', tag), 'invalid-tag')\n     return tag[1:]\n \n",
+        "assertions": [
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_bounded_stable_tag_contract_before_outputs_or_external_tools",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 == 0"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "test_sha256_after": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "patch_provenance": "Original exact patch applied unchanged: 1fe312f77ec33a4fdcba21e8d663ecf0ef6ec953fca2854182c26e645dfc2366"
+      },
+      {
+        "name": "R-M08-receipt-is-not-covered-by-hash",
+        "verdict": "assertion-killed",
+        "methods": 30,
+        "exit_code": 1,
+        "seconds": 18.178,
+        "log_sha256": "352e46ca537d5814a6f5cf6357c1d25638b39e923a5d082ed57bb959dfed22af",
+        "patch_sha256": "caebf517a81652baf5a961e5bb2651d0f9318286c3386d8a9ba7a2a29c36422b",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -173,7 +173,7 @@\n         require(verified.returncode == 0, 'signature-verification-failed')\n         unchanged()\n         checksums = ''.join(f'{sha(streams[name])}  {name}\\n' for name in sorted(signed))\n-        require(streams['SHA256SUMS'].read() == checksums.encode(), 'signed-checksum-mismatch')\n+        require([x for x in streams['SHA256SUMS'].read().splitlines() if not x.endswith(b'  release-metadata.json')] == [x for x in checksums.encode().splitlines() if not x.endswith(b'  release-metadata.json')], 'signed-checksum-mismatch')\n         source = receipt(document(streams['release-metadata.json'].read()), tag)\n         descriptors = []\n         for system, cpu, target, suffix, binary in PLATFORMS:\n",
+        "assertions": [
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_signed_receipt_bytes_are_hashed_not_only_archive_bytes",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          },
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_duplicate_signed_manifest_lines_are_not_complete_inventory",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "test_sha256_after": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "patch_provenance": "Original exact patch applied unchanged: 440216ab96f729c246938f85b1925c746846b25d3ef16ddb12d7a1cfb2e4c6c6"
+      },
+      {
+        "name": "R-M09-duplicate-manifest-lines-admitted",
+        "verdict": "assertion-killed",
+        "methods": 30,
+        "exit_code": 1,
+        "seconds": 18.338,
+        "log_sha256": "ec6080c84f79d5ab42ca90823cc251f8f63432bc9437c354692c20c487704d2a",
+        "patch_sha256": "231cdb5a4bacf6db7cce22b4324fb494759414ab89aec8d88e86ed0bc0fff41b",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -173,7 +173,7 @@\n         require(verified.returncode == 0, 'signature-verification-failed')\n         unchanged()\n         checksums = ''.join(f'{sha(streams[name])}  {name}\\n' for name in sorted(signed))\n-        require(streams['SHA256SUMS'].read() == checksums.encode(), 'signed-checksum-mismatch')\n+        require(set(streams['SHA256SUMS'].read().splitlines()) == set(checksums.encode().splitlines()), 'signed-checksum-mismatch')\n         source = receipt(document(streams['release-metadata.json'].read()), tag)\n         descriptors = []\n         for system, cpu, target, suffix, binary in PLATFORMS:\n",
+        "assertions": [
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_duplicate_signed_manifest_lines_are_not_complete_inventory",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "test_sha256_after": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "patch_provenance": "Original exact patch applied unchanged: bc3081ce5e0dbe9bdb93624a77328eec336b79eea470ed398e00a6703d702ba6"
+      },
+      {
+        "name": "R-M11-malformed-source-digests-admitted",
+        "verdict": "assertion-killed",
+        "methods": 30,
+        "exit_code": 1,
+        "seconds": 21.758,
+        "log_sha256": "19a692932faed02df12602761b28af54affa26cd7237056bf6a267065adeac45",
+        "patch_sha256": "d737c2d6c8d842ae6e55175769d0a41e409c59f5cb18b544a1144e8aab1c7d59",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -103,8 +103,7 @@\n     require(isinstance(data['commit'], str) and re.fullmatch(r'[0-9a-f]{40}|[0-9a-f]{64}', data['commit']), 'invalid-source-commit')\n     inputs = data['inputs']\n     require(isinstance(inputs, dict) and set(inputs) == {'Cargo.toml', 'Cargo.lock', 'CHANGELOG.md'}, 'invalid-source-inputs')\n-    require(all(isinstance(v, str) and re.fullmatch(r'[0-9a-f]{64}', v)\n-                for v in [*inputs.values(), data['notesSHA256']]), 'invalid-source-digest')\n+    require(True, 'invalid-source-digest')\n     return data\n \n \n",
+        "assertions": [
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_source_receipt_digests_and_schema_are_strict",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          },
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_source_receipt_digests_and_schema_are_strict",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          },
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_source_receipt_digests_and_schema_are_strict",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "test_sha256_after": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "patch_provenance": "Original exact patch applied unchanged: d737c2d6c8d842ae6e55175769d0a41e409c59f5cb18b544a1144e8aab1c7d59"
+      },
+      {
+        "name": "R-M12-zip-links-admitted",
+        "verdict": "assertion-killed",
+        "methods": 30,
+        "exit_code": 1,
+        "seconds": 21.13,
+        "log_sha256": "28ebc4e888b3e1957ea9473b4c225adaa536604d7e3c7717946a8ed887e95803",
+        "patch_sha256": "b9b408bd310a16585cc03d0f4b402410580bd80beecd87618c65f0c325e8522c",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -114,9 +114,7 @@\n         members = archive.infolist()\n         names = [(m.filename, m.is_dir(), m.file_size, m) for m in members]\n         require(all(m.orig_filename == m.filename and not m.flag_bits & 1\n-                    and ((m.is_dir() and stat.S_IFMT(m.external_attr >> 16) in (0, stat.S_IFDIR))\n-                         or (not m.is_dir() and stat.S_IFMT(m.external_attr >> 16) in (0, stat.S_IFREG)\n-                             and not m.external_attr & 0x10))\n+                    and True\n                     for m in members), 'unsafe-archive-member')\n         opener = lambda member: archive.open(member)\n     else:\n",
+        "assertions": [
+          {
+            "test": "publication_tests_1.IndependentArchiveIdentityTests.test_zip_directory_type_cannot_be_selected_as_regular_binary",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          },
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_zip_symlink_cannot_supply_the_selected_binary",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          },
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_zip_directory_flags_and_types_agree_with_the_member_kind",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          },
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_zip_directory_flags_and_types_agree_with_the_member_kind",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "test_sha256_after": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "patch_provenance": "ZIP metadata variant adapted to the corrected guard; original patch retained separately"
+      },
+      {
+        "name": "R-M13-duplicate-member-overwrites-selection",
+        "verdict": "assertion-killed",
+        "methods": 30,
+        "exit_code": 1,
+        "seconds": 19.17,
+        "log_sha256": "38ceed9442873ad93024233bb5a7bbdca1a68fb271fa358cd403f2edcd616d5c",
+        "patch_sha256": "8b805446b2fb6f4773771b7d5db67fbcaf463b521de31b3c4d67f8283e85d6e1",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -130,7 +130,7 @@\n     seen, files = set(), {}\n     for name, directory, size, member in names:\n         canonical = name.rstrip('/')\n-        require(canonical not in seen, 'duplicate-archive-member')\n+        require(True, 'duplicate-archive-member')\n         seen.add(canonical)\n         if directory:\n             require(canonical == prefix, 'unsafe-archive-directory')\n",
+        "assertions": [
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_duplicate_binary_members_are_ambiguous_even_without_a_directory_record",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "test_sha256_after": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "patch_provenance": "Original exact patch applied unchanged: 3df35e3621caf5f64a78dae7f77ae176d7ab856cde68f1497f92b576ad51b692"
+      },
+      {
+        "name": "R-M14-select-binary-by-basename",
+        "verdict": "assertion-killed",
+        "methods": 30,
+        "exit_code": 1,
+        "seconds": 21.995,
+        "log_sha256": "59984bcb39f894dc3239e64f1c5641a2f5941208b2f5ff1f0e420ada757fd1ed",
+        "patch_sha256": "f25fd1231d95bcf07703df16f3c9fda696ce09cd95c0740fd2733aa426be7e83",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -135,8 +135,8 @@\n         if directory:\n             require(canonical == prefix, 'unsafe-archive-directory')\n         else:\n-            require(name in allowed and 0 < size <= (MAX_ARCHIVE if name.endswith('/' + binary) else MAX_TEXT), 'unexpected-archive-member')\n-            files[name] = member\n+            require(name.rsplit('/', 1)[-1] in {binary, 'README.md', 'LICENSE', 'CHANGELOG.md'} and 0 < size <= (MAX_ARCHIVE if name.endswith('/' + binary) else MAX_TEXT), 'unexpected-archive-member')\n+            files[prefix + '/' + name.rsplit('/', 1)[-1]] = member\n     require(set(files) == allowed, 'missing-archive-member')\n     with opener(files[prefix + '/CHANGELOG.md']) as changelog:\n         require(hashlib.sha256(changelog.read(MAX_TEXT + 1)).hexdigest() == changelog_digest, 'archive-changelog-mismatch')\n",
+        "assertions": [
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_binary_basename_is_insufficient_without_the_expected_version_target_path",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "test_sha256_after": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "patch_provenance": "Original exact patch applied unchanged: d2a7269b57c0aa1bb2afab3ebec349d3b6432b3970812380266abff088cf4205"
+      },
+      {
+        "name": "R-M17-registry-auth-errors-imply-absent",
+        "verdict": "assertion-killed",
+        "methods": 30,
+        "exit_code": 1,
+        "seconds": 20.402,
+        "log_sha256": "c043dab209f547bbb976367276aeb6ad66d59ce7f5becdc96699e869f5c74297",
+        "patch_sha256": "6ad83d7dfd2896194b9f4062e32d612a438c2b886aa525a6a2d8bc78c09a5195",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -228,7 +228,7 @@\n         return True\n     response = document(result.stdout.strip() or result.stderr)\n     require(isinstance(response, dict) and isinstance(response.get('error'), dict)\n-            and response['error'].get('code') == 'E404', 'registry-query-failed')\n+            and response['error'].get('code') in ('E404', 'E401', 'E403', 'E500'), 'registry-query-failed')\n     return False\n \n \n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_registry_errors_cannot_mean_absent_or_cause_partial_publication",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          },
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_registry_errors_cannot_mean_absent_or_cause_partial_publication",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          },
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_registry_errors_cannot_mean_absent_or_cause_partial_publication",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          },
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_late_registry_failure_cannot_publish_an_earlier_package",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "test_sha256_after": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "patch_provenance": "Original exact patch applied unchanged: 84fa702eed0a55b241986100af5df2e8df568796aebedde658fdb711bde1fbc0"
+      },
+      {
+        "name": "R-M18-lazy-registry-queries-interleave-publication",
+        "verdict": "assertion-killed",
+        "methods": 30,
+        "exit_code": 1,
+        "seconds": 20.515,
+        "log_sha256": "2a8c72bf1721befc1c2367a6b53f9f6dfa3538d0f0e5352d1d67479386fc583c",
+        "patch_sha256": "d4bce96356eedbb6940d04df61da760ed85d27b5c3a4125fbe366c897decbabd",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -238,7 +238,7 @@\n     npm = run(['npm', '--version'])\n     require(npm.returncode == 0 and re.fullmatch(r'[0-9]+\\.[0-9]+\\.[0-9]+', npm.stdout.strip())\n             and tuple(map(int, npm.stdout.strip().split('.'))) >= (11, 5, 1), 'unsupported-npm-version')\n-    pending = [(path, name) for path, name in packages if not registry_exists(name, selected)]\n+    pending = ((path, name) for path, name in packages if not registry_exists(name, selected))\n     for path, name in pending:\n         require(run(['npm', 'publish', '--provenance', '--access', 'public', '--ignore-scripts'], cwd=path).returncode == 0,\n                 'npm-publication-failed')\n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_confirmed_absence_publishes_exact_packages_then_launcher_with_provenance",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: False is not true"
+          },
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_registry_errors_cannot_mean_absent_or_cause_partial_publication",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: [{'tool': 'npm', 'args': ['publish', '--provenance', '--access', 'public', '--ignore-scripts'], 'cwd': '/private/var/folders/1k/cnq4g32d3qv8_ccj8cxzmhs00000gq/T/syn341-npm-test-r5dvx22u/prepared/darwin-arm64'}, {'tool': 'npm', 'args': ['publish', '--provenance', '--access', 'public', '--ignore-scripts'], 'cwd': '/private/var/folders/1k/cnq4g32d3qv8_ccj8cxzmhs00000gq/T/syn341-npm-test-r5dvx22u/prepared/linux-x64'}] is not false"
+          },
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_registry_errors_cannot_mean_absent_or_cause_partial_publication",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: [{'tool': 'npm', 'args': ['publish', '--provenance', '--access', 'public', '--ignore-scripts'], 'cwd': '/private/var/folders/1k/cnq4g32d3qv8_ccj8cxzmhs00000gq/T/syn341-npm-test-r5dvx22u/prepared/darwin-arm64'}, {'tool': 'npm', 'args': ['publish', '--provenance', '--access', 'public', '--ignore-scripts'], 'cwd': '/private/var/folders/1k/cnq4g32d3qv8_ccj8cxzmhs00000gq/T/syn341-npm-test-r5dvx22u/prepared/linux-x64'}] is not false"
+          },
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_registry_errors_cannot_mean_absent_or_cause_partial_publication",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: [{'tool': 'npm', 'args': ['publish', '--provenance', '--access', 'public', '--ignore-scripts'], 'cwd': '/private/var/folders/1k/cnq4g32d3qv8_ccj8cxzmhs00000gq/T/syn341-npm-test-r5dvx22u/prepared/darwin-arm64'}, {'tool': 'npm', 'args': ['publish', '--provenance', '--access', 'public', '--ignore-scripts'], 'cwd': '/private/var/folders/1k/cnq4g32d3qv8_ccj8cxzmhs00000gq/T/syn341-npm-test-r5dvx22u/prepared/linux-x64'}] is not false"
+          },
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_registry_errors_cannot_mean_absent_or_cause_partial_publication",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: [{'tool': 'npm', 'args': ['publish', '--provenance', '--access', 'public', '--ignore-scripts'], 'cwd': '/private/var/folders/1k/cnq4g32d3qv8_ccj8cxzmhs00000gq/T/syn341-npm-test-r5dvx22u/prepared/darwin-arm64'}, {'tool': 'npm', 'args': ['publish', '--provenance', '--access', 'public', '--ignore-scripts'], 'cwd': '/private/var/folders/1k/cnq4g32d3qv8_ccj8cxzmhs00000gq/T/syn341-npm-test-r5dvx22u/prepared/linux-x64'}] is not false"
+          },
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_late_registry_failure_cannot_publish_an_earlier_package",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: [{'tool': 'npm', 'args': ['publish', '--provenance', '--access', 'public', '--ignore-scripts'], 'cwd': '/private/var/folders/1k/cnq4g32d3qv8_ccj8cxzmhs00000gq/T/syn341-npm-test-_nurukvb/prepared/darwin-arm64'}, {'tool': 'npm', 'args': ['publish', '--provenance', '--access', 'public', '--ignore-scripts'], 'cwd': '/private/var/folders/1k/cnq4g32d3qv8_ccj8cxzmhs00000gq/T/syn341-npm-test-_nurukvb/prepared/linux-x64'}] is not false"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "test_sha256_after": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "patch_provenance": "Original exact patch applied unchanged: e981e48867e131f869a018b0eb2c153f6ddc9da6ff4e9f255dc1314937d79ea5"
+      },
+      {
+        "name": "R-M22-wrong-platform-package-version",
+        "verdict": "assertion-killed",
+        "methods": 30,
+        "exit_code": 1,
+        "seconds": 17.881,
+        "log_sha256": "978e4b9c89b3aa41597ca4f91ec3ec2173715a9744f4d67c734ec56e7deda31d",
+        "patch_sha256": "00651fd18eaa016ebc480218bebf2331ee8d535fec3db31751dfc0a42b10eb49",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -193,7 +193,7 @@\n                     require(count <= MAX_ARCHIVE, 'expanded-binary-too-large')\n                     target.write(block)\n             (destination / binary).chmod(0o755)\n-            package = {'name': f'@febasi/synapse-{system}-{cpu}', 'version': selected,\n+            package = {'name': f'@febasi/synapse-{system}-{cpu}', 'version': '0.0.0',\n                        'description': f'Prebuilt syn binary for {system}-{cpu}. Companion to @febasi/synapse.',\n                        'license': 'MIT', 'os': [system], 'cpu': [cpu], 'files': [binary],\n                        'homepage': f'https://github.com/{MIRROR}',\n",
+        "assertions": [
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_every_platform_and_launcher_manifest_uses_the_selected_version",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: '0.0.0' != '1.5.0'"
+          },
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_every_platform_and_launcher_manifest_uses_the_selected_version",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: '0.0.0' != '1.5.0'"
+          },
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_every_platform_and_launcher_manifest_uses_the_selected_version",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: '0.0.0' != '1.5.0'"
+          },
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_every_platform_and_launcher_manifest_uses_the_selected_version",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: '0.0.0' != '1.5.0'"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "test_sha256_after": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "patch_provenance": "Original exact patch applied unchanged: 9cba9e55a4b6ed6d5cf91843b4aee050c75c856dd596dcb8db92d0c52506e0bf"
+      },
+      {
+        "name": "R-M23-wrong-launcher-package-version",
+        "verdict": "assertion-killed",
+        "methods": 30,
+        "exit_code": 1,
+        "seconds": 17.611,
+        "log_sha256": "30bac0715a9b2c68857bd0282ce8636fd80ee3861724bb1f20deeb69182451bb",
+        "patch_sha256": "ad231baa77971dd9b723cd987bdd4640e9a302885461ee2cdb4f98247bb91493",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -212,7 +212,7 @@\n             for name in ('README.md', 'bin/syn.js'):\n                 (destination / name).write_bytes(regular(launcher_stack, launcher / name, MAX_TEXT).read())\n             (destination / 'bin/syn.js').chmod(0o755)\n-            package['version'] = selected\n+            package['version'] = '0.0.0'\n             package['optionalDependencies'] = {name: selected for _, name in packages}\n             write_json(destination / 'package.json', package)\n         packages.append((destination, '@febasi/synapse'))\n",
+        "assertions": [
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_every_platform_and_launcher_manifest_uses_the_selected_version",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: '0.0.0' != '1.5.0'"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "test_sha256_after": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "patch_provenance": "Original exact patch applied unchanged: cdd0645b8755ae07449fc07e241e30628eda220f1877fd9551b3213d09cc59c5"
+      },
+      {
+        "name": "R-M25-extra-unsigned-release-assets-admitted",
+        "verdict": "assertion-killed",
+        "methods": 30,
+        "exit_code": 1,
+        "seconds": 18.671,
+        "log_sha256": "d3a456e1c6b57615ad92d7c5768b892d199c35eae71e3a2c657302c7fc257b61",
+        "patch_sha256": "84c058134db1f7892158ecaa64fdac3fbce968ccc5b1e91f05fa10f1965d384a",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -154,7 +154,7 @@\n     require(directory.is_dir() and not directory.is_symlink(), 'unsafe-download-directory')\n     archives = archive_names(tag)\n     signed = archives | {'release-metadata.json'}\n-    require({p.name for p in directory.iterdir()} == signed | {'SHA256SUMS', 'SHA256SUMS.cosign.bundle'}, 'incomplete-release-inventory')\n+    require(True, 'incomplete-release-inventory')\n     require(not os.path.lexists(output), 'package-destination-exists')\n     with ExitStack() as stack:\n         streams = {name: regular(stack, directory / name, MAX_ARCHIVE if name in archives else MAX_TEXT)\n",
+        "assertions": [
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_missing_extra_and_symlink_assets_are_not_authenticated",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: {'status': 'rejected', 'reason': 'missing-or-unsafe-file'} != {'status': 'rejected', 'reason': 'incomplete-release-inventory'}"
+          },
+          {
+            "test": "publication_tests_0.NpmWorkflowTests.test_missing_extra_and_symlink_assets_are_not_authenticated",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "test_sha256_after": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "patch_provenance": "Original exact patch applied unchanged: b11993a870e5e1b818a6e05d7a06223187d6ec46a95bf7bce21f36fa29fee5b9"
+      },
+      {
+        "name": "C01-normalized-zip-name-guard-removed",
+        "verdict": "assertion-killed",
+        "methods": 30,
+        "exit_code": 1,
+        "seconds": 17.631,
+        "log_sha256": "dbdec80e84a75679150d104c12945148530a5a6989671105c035bf3be90e5181",
+        "patch_sha256": "cea94d2b6bdc0017468aba0cc6396511bbc2ea31dcd27b7bf3364dd0b151af8c",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -113,7 +113,7 @@\n         archive = stack.enter_context(zipfile.ZipFile(stream))\n         members = archive.infolist()\n         names = [(m.filename, m.is_dir(), m.file_size, m) for m in members]\n-        require(all(m.orig_filename == m.filename and not m.flag_bits & 1\n+        require(all(not m.flag_bits & 1\n                     and ((m.is_dir() and stat.S_IFMT(m.external_attr >> 16) in (0, stat.S_IFDIR))\n                          or (not m.is_dir() and stat.S_IFMT(m.external_attr >> 16) in (0, stat.S_IFREG)\n                              and not m.external_attr & 0x10))\n",
+        "assertions": [
+          {
+            "test": "publication_tests_1.IndependentArchiveIdentityTests.test_zip_original_member_name_cannot_be_hidden_by_nul_normalization",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "test_sha256_after": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "patch_provenance": "New corrective guard removal"
+      },
+      {
+        "name": "C02-dos-directory-bit-on-binary-ignored",
+        "verdict": "assertion-killed",
+        "methods": 30,
+        "exit_code": 1,
+        "seconds": 18.015,
+        "log_sha256": "65a84d4e29059ef4772009e479dcd5094bb6cd30c3b02f6e18f706220db2ebce",
+        "patch_sha256": "1ec1ba71ad00ad7dfb91f510334d01fdf3f4905623badf9484b4bb1f1082be5b",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -115,8 +115,7 @@\n         names = [(m.filename, m.is_dir(), m.file_size, m) for m in members]\n         require(all(m.orig_filename == m.filename and not m.flag_bits & 1\n                     and ((m.is_dir() and stat.S_IFMT(m.external_attr >> 16) in (0, stat.S_IFDIR))\n-                         or (not m.is_dir() and stat.S_IFMT(m.external_attr >> 16) in (0, stat.S_IFREG)\n-                             and not m.external_attr & 0x10))\n+                         or (not m.is_dir() and stat.S_IFMT(m.external_attr >> 16) in (0, stat.S_IFREG)))\n                     for m in members), 'unsafe-archive-member')\n         opener = lambda member: archive.open(member)\n     else:\n",
+        "assertions": [
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_zip_directory_flags_and_types_agree_with_the_member_kind",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "test_sha256_after": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "patch_provenance": "New corrective guard removal"
+      },
+      {
+        "name": "C03-directory-entry-unix-type-unchecked",
+        "verdict": "assertion-killed",
+        "methods": 30,
+        "exit_code": 1,
+        "seconds": 17.393,
+        "log_sha256": "23ec76347b7d3d74e48725e4d5c0f50af333f89dbe81479d472c53e42d4772b1",
+        "patch_sha256": "2e40a698349e67907932b60e9addbe2e3c85a5db53e6bf6f1c86c543cf8be9b6",
+        "patch": "--- a/scripts/publish-npm.py\n+++ b/scripts/publish-npm.py\n@@ -114,7 +114,7 @@\n         members = archive.infolist()\n         names = [(m.filename, m.is_dir(), m.file_size, m) for m in members]\n         require(all(m.orig_filename == m.filename and not m.flag_bits & 1\n-                    and ((m.is_dir() and stat.S_IFMT(m.external_attr >> 16) in (0, stat.S_IFDIR))\n+                    and ((m.is_dir())\n                          or (not m.is_dir() and stat.S_IFMT(m.external_attr >> 16) in (0, stat.S_IFREG)\n                              and not m.external_attr & 0x10))\n                     for m in members), 'unsafe-archive-member')\n",
+        "assertions": [
+          {
+            "test": "publication_tests_1.IndependentPublicationCoverageTests.test_zip_directory_flags_and_types_agree_with_the_member_kind",
+            "type": "builtins.AssertionError",
+            "assertion": "AssertionError: 0 != 1"
+          }
+        ],
+        "error_types": [],
+        "test_sha256_before": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "test_sha256_after": {
+          "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+          "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+        },
+        "patch_provenance": "New corrective guard removal"
+      }
+    ],
+    "restored": {
+      "methods": 30,
+      "exit_code": 0,
+      "seconds": 17.985,
+      "test_sha256_before": {
+        "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+        "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+      },
+      "test_sha256_after": {
+        "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+        "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4"
+      },
+      "log_sha256": "3f888e63d5ad6f221701cbe03a793d087126924af8b0ac15e41fa83c1c940edc"
+    }
+  },
+  "producer_compatibility": {
+    "source_test_commit": "1d62626",
+    "source_author_fix": "76ea7e09d4191791a32195eafd972bc5a9fc0f76",
+    "default_member_counts": [
+      10,
+      10,
+      10
+    ],
+    "default_prepare_exit_code": 1,
+    "COPYFILE_DISABLE_1_member_counts": [
+      5,
+      5,
+      5
+    ],
+    "normalized_prepare_exit_code": 0,
+    "prepared_binary_sha256": {
+      "darwin-arm64": "d7ef15a2691cfb45479a4fca845b6698236ff7d557af6cd9fa90a574c7fc2b24",
+      "linux-x64": "039719b058cfd2d6e0f4881950d2b9fc3de4279b58699ec4b5ff2389691e057c",
+      "linux-arm64": "df14d811cea543d5a1a4e1c9ab37fc2043408e9440ba7fcfc3b4b96138184101",
+      "win32-x64": "2060eee5b490904882b74a50d9da1e0fd19a1203a7858694137a1fc29c510e5f"
+    },
+    "npm_calls": 0,
+    "representative_zip_root_profiles": [
+      "Unix directory/file types",
+      "DOS directory/file attributes",
+      "unspecified directory attributes"
+    ],
+    "actual_windows_7z_executed": false,
+    "source_followup_original_methods": 13,
+    "source_followup_independent_methods": 10,
+    "source_followup_metadata_removal_assertion_killed": true
+  },
+  "additional_invalid_or_limited_attempts": [
+    "The initial supplemental producer fixture expected five members but actual BSD tar emitted ten AppleDouble entries. It failed a fixture precondition, not a consumer assertion. The raw and normalized producer behavior was then captured separately.",
+    "An initial exploratory owned-file metadata query used unavailable os.listxattr on macOS and stopped before tar or publisher execution. It has no mutation verdict.",
+    "M17 and M25 original invalid attempts contain FileExistsError after failed subtests; M18 additionally contains JSONDecodeError from partial-publication stdout. Test-only fixture admission cleanup and assertion ordering corrected these runtime artifacts after the frozen first round."
+  ],
+  "limits": [
+    "External gh, cosign and npm commands were controlled recording fixtures. No real download, Sigstore verification, registry query, OIDC authorization, install or publication occurred.",
+    "Archived payloads were owned synthetic inputs and were not executed. Actual local tar was executed; Windows7z was not installed or executed.",
+    "The source packaging fix and its separate metadata-removal negative control are not counted among the downstream25 or15 mutants.",
+    "The first workflow interpolation variant changes two downstream shell uses and is killed by the explicit no-expression source assertion while strict tag guards remain present; this is not claimed as a fresh command-execution exploit.",
+    "Eleven original replay patches were applied unchanged. The ZIP type variant was retargeted to the corrected metadata guard, with both exact patches preserved.",
+    "The independent scope is the30-method publication core. The evolving required-module CI admission gate is separately reviewed and tested by the root team; its39-method run is not claimed as this reviewer's execution.",
+    "Successful npm preflight is not a transaction across remote packages. A later real publication failure may leave earlier packages published; the helper preserves matching existing versions on a fresh retry.",
+    "Real platform builds, signing, release creation, tag movement and remote publication remain outside this review."
+  ]
+}

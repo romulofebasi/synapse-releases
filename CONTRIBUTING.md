@@ -37,6 +37,30 @@ Installer and launcher changes require separate runtime review. The current inst
 
 Public reports must exclude credentials, raw private knowledge, filesystem paths and sensitive verification details. Include a sanitized reproduction, installed version, selected model/profile and clearly bounded evidence instead.
 
+## Publication changes and reproducible evidence
+
+Read [ADR 0001](docs/adr/0001-authenticated-npm-publication.md) before changing
+the npm publication path. Apply the [Febasi test-first skill](https://github.com/romulofebasi/febasi-standards/blob/main/skills/test-first/SKILL.md):
+preserve an observable assertion RED, correct the responsible production layer,
+run the relevant complete suite, and ask an independent reviewer to execute
+plausible wrong implementations against the frozen tests. Preserve survivors
+before strengthening tests. Compiler errors, missing tools, timeouts and generic
+runner failures are invalid behavioral evidence.
+
+From the repository root, reproduce the controlled publication suite:
+
+```sh
+python3 scripts/check-npm-publish-tests.py -v
+```
+
+The suite invokes the actual helper and workflow steps with recording external
+tool fakes. It requires no registry writes, downloaded product execution or
+publication credentials. A passing local fixture run does not establish genuine
+Sigstore verification, platform builds or npm publication. Keep raw logs private
+and record source/test hashes, assertions, counts and remaining CI or publication
+gates in an allowlisted receipt. Use the private security disclosure channel for
+sensitive findings and reproduction details.
+
 ## What cannot be a pull request here
 
 The Rust source of the `syn` binary lives in a separate private repository, so

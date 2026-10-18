@@ -55,6 +55,11 @@ syn --version
 
 npm installs a companion binary package for the matching operating system and CPU; the Node.js launcher starts that installed executable. Model downloads are a separate, consented step. See [models and privacy](MODELS.md).
 
+The [npm publication contract](docs/adr/0001-authenticated-npm-publication.md)
+describes authenticated release inputs, exact package selection and ordered OIDC
+publication. Its verification receipt distinguishes controlled tests from an
+actual release or npm publish.
+
 <a id="one-liner-macos-linux"></a>
 
 ### macOS or Linux installer
