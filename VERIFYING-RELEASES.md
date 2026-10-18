@@ -77,3 +77,16 @@ an actual release signature or registry publication. The [evidence receipt](docs
 retains the original source and verification limits. Contributors can reproduce
 the recording-tool suite with `python3 scripts/check-npm-publish-tests.py -v`,
 following the [Febasi test-first standard](https://github.com/romulofebasi/febasi-standards/blob/main/skills/test-first/SKILL.md).
+
+## Observed v1.5.1 publication
+
+The [actual publication receipt](docs/verification/SYN-343-published/README.md)
+records signed source/mirror verification, canonical documentation in all four
+archives, five exact npm versions, SRI and binary comparison, and the macOS ARM64
+launcher execution. Other platforms were compared as bytes and built by the
+release workflow. Advertised npm provenance is distinct from independently
+verified npm attestation signatures. The original preparation reports remain
+frozen; this observation does not change the convenience installer policy.
+
+A separate [retained-evidence review](docs/verification/SYN-343-published/independent.md)
+recomputes the published-byte comparisons and records reviewer roles and limits.
