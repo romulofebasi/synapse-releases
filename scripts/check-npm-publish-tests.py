@@ -79,6 +79,10 @@ else:sys.exit(2)
         self.assertFalse(self.calls('npm'), 'Rejected inputs must not reach any registry or publication call')
 
     def fixture(self):
+        # A failed subtest must not turn later contract assertions into setup errors.
+        for name in ('dl', 'prepared'):
+            shutil.rmtree(self.root / name, ignore_errors=True)
+        (self.root / 'calls').unlink(missing_ok=True)
         directory = self.root / 'dl'
         directory.mkdir()
         self.targets = [('aarch64-apple-darwin', 'tar.gz', 'syn'),
@@ -276,8 +280,8 @@ else:sys.exit(2)
                 self.environment['REGISTRY_RESULTS'] = json.dumps({'@febasi/synapse-linux-arm64': error})
                 result = self.invoke('publish')
                 self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-                self.assertEqual(json.loads(result.stdout)['reason'], 'invalid-json' if error == 'malformed' else 'registry-query-failed')
                 self.assertFalse([r for r in self.calls('npm') if r['args'][0] == 'publish'])
+                self.assertEqual(json.loads(result.stdout)['reason'], 'invalid-json' if error == 'malformed' else 'registry-query-failed')
                 shutil.rmtree(self.root / 'dl')
                 shutil.rmtree(self.root / 'prepared')
                 (self.root / 'calls').unlink()
