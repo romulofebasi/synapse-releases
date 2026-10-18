@@ -53,6 +53,14 @@ class DistributionAdmissionTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'selected no cases'):
                 gate.load_required(root, names=('required.py',))
 
+    def test_undersized_declared_publication_module_cannot_pass(self):
+        with tempfile.TemporaryDirectory(prefix='distribution-admission-') as temporary:
+            root = Path(temporary)
+            name = 'check-npm-publish-tests.py'
+            (root / name).write_text('import unittest\nclass Case(unittest.TestCase):\n def test_one(self): pass\n')
+            with self.assertRaisesRegex(ValueError, 'fewer than its admitted cases'):
+                gate.load_required(root, names=(name,))
+
 
 if __name__ == '__main__':
     unittest.main()

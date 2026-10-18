@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Admit the explicit distribution suites through unittest's result API."""
 import importlib.util
-import io
 from pathlib import Path
 import sys
 import unittest
 
-REQUIRED_MODULES = ('check-npm-publish-tests.py', 'check-distribution-gate-tests.py')
+REQUIRED_MODULES = ('check-npm-publish-tests.py', 'check-npm-independent-tests.py', 'check-distribution-gate-tests.py')
+MINIMUM_MODULE_CASES = {'check-npm-publish-tests.py': 16, 'check-npm-independent-tests.py': 13,
+                        'check-distribution-gate-tests.py': 7}
 MINIMUM_CASES = 16
 
 
@@ -24,6 +25,8 @@ def load_required(directory, names=REQUIRED_MODULES):
         selected = unittest.defaultTestLoader.loadTestsFromModule(module)
         if selected.countTestCases() == 0:
             raise ValueError('Required module selected no cases')
+        if selected.countTestCases() < MINIMUM_MODULE_CASES.get(name, 1):
+            raise ValueError('Required module selected fewer than its admitted cases')
         suite.addTests(selected)
     return suite
 
