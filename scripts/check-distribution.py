@@ -7,7 +7,7 @@ import unittest
 
 REQUIRED_MODULES = ('check-npm-publish-tests.py', 'check-npm-independent-tests.py', 'check-distribution-gate-tests.py')
 MINIMUM_MODULE_CASES = {'check-npm-publish-tests.py': 16, 'check-npm-independent-tests.py': 14,
-                        'check-distribution-gate-tests.py': 8}
+                        'check-distribution-gate-tests.py': 9}
 MINIMUM_CASES = 16
 
 
@@ -47,7 +47,7 @@ def admit(suite, minimum=MINIMUM_CASES, stream=None):
 def main():
     try:
         return 0 if admit(load_required(Path(__file__).resolve().parent)) else 1
-    except (OSError, ValueError, ImportError):
+    except (OSError, ValueError, ImportError, SystemExit):
         print('Required distribution evidence is missing or invalid.', file=sys.stderr)
         return 1
 

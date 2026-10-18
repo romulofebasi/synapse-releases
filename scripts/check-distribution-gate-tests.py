@@ -79,6 +79,19 @@ class DistributionAdmissionTests(unittest.TestCase):
         self.assertNotEqual(self.run_fixture('imported-unittest-runner').returncode, 0,
                             'A required module exiting successfully during import must not admit missing independent evidence')
 
+    def test_required_selection_termination_cannot_admit_missing_later_module(self):
+        with tempfile.TemporaryDirectory(prefix='syn341-selection-') as temporary:
+            root = Path(temporary)
+            shutil.copyfile(Path(__file__).with_name('check-distribution.py'), root / 'check-distribution.py')
+            methods = ''.join(f' def test_{index:02d}(self): pass\n' for index in range(16))
+            (root / 'check-npm-publish-tests.py').write_text(
+                'import unittest\nclass Evidence(unittest.TestCase):\n' + methods +
+                '\ndef load_tests(loader, tests, pattern):\n raise SystemExit(0)\n')
+            result = subprocess.run([sys.executable, str(root / 'check-distribution.py')],
+                                    capture_output=True, text=True, timeout=15)
+            self.assertNotEqual(result.returncode, 0,
+                                'A required unittest selection hook terminating successfully must not admit missing evidence')
+
 
 if __name__ == '__main__':
     unittest.main()
