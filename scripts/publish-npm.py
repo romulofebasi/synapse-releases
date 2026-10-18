@@ -113,8 +113,11 @@ def archive_members(stack, stream, prefix, suffix, binary, changelog_digest):
         archive = stack.enter_context(zipfile.ZipFile(stream))
         members = archive.infolist()
         names = [(m.filename, m.is_dir(), m.file_size, m) for m in members]
-        require(all((stat.S_IFMT(m.external_attr >> 16) in (0, stat.S_IFREG, stat.S_IFDIR))
-                    and not m.flag_bits & 1 for m in members), 'unsafe-archive-member')
+        require(all(m.orig_filename == m.filename and not m.flag_bits & 1
+                    and ((m.is_dir() and stat.S_IFMT(m.external_attr >> 16) in (0, stat.S_IFDIR))
+                         or (not m.is_dir() and stat.S_IFMT(m.external_attr >> 16) in (0, stat.S_IFREG)
+                             and not m.external_attr & 0x10))
+                    for m in members), 'unsafe-archive-member')
         opener = lambda member: archive.open(member)
     else:
         archive = stack.enter_context(tarfile.open(fileobj=stream, mode='r:gz'))
