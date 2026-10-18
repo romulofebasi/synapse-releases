@@ -1,0 +1,16 @@
+name: distribution checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  Gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify actual publication boundaries with controlled external tools
+        run: python3 scripts/check-npm-publish-tests.py -v
