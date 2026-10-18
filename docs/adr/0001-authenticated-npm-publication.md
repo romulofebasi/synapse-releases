@@ -1,6 +1,7 @@
 # ADR 0001: Authenticate release inputs before npm publication
 
-Status: Accepted design, implementation verification in progress
+Status: Accepted design; local integration and independent reviews complete;
+final-head hosted CI and publication evidence pending
 
 Date: 2026-10-17
 
@@ -96,15 +97,54 @@ compatibility, notarization or workspace knowledge truth.
 
 ## Verification and remaining evidence
 
-The [allowlisted receipt](../verification/SYN-341-authenticated-npm-publication.json)
-records the original one-assertion RED and the 16-method author GREEN at
-`f142eb5`. These tests execute the actual helper and workflow steps with private
-temporary files and recording `gh`, `cosign` and `npm` fakes. They test argument,
-ordering, byte-selection and failure boundaries. They do not establish real
-cryptography, a Rust platform build, registry credentials or actual npm publication.
+The [original allowlisted receipt](../verification/SYN-341-authenticated-npm-publication.json)
+remains a historical record of the one-assertion RED and 16-method author GREEN
+at `f142eb5`. Its counts and then-pending gates have not been rewritten as current
+acceptance. The [integration follow-up](../verification/SYN-341-integration-follow-up.json)
+records the later source, evidence digests and remaining gates.
 
-Independent mutation review, exact-head CI and actual publication after the
-existing review gates remain separate evidence. Preserve original survivors and invalid attempts when
-strengthening tests. Follow the [Febasi test-first skill](https://github.com/romulofebasi/febasi-standards/blob/main/skills/test-first/SKILL.md),
-including actual assertion RED, restored GREEN and independent challenges. Keep
-raw runner logs private; publish reviewed counts, digests and explicit limits.
+The actual strict distribution suite at `b57f5f1` passed all 39 methods: 16
+author publication methods, 14 independent core methods and nine admission
+controls. Root's run passed in 20.399 seconds; independent execution of the same
+frozen production and test files passed in 22.105 seconds. Both exited with code 0 and no
+failures, errors, skips or expected failures. The CI gate uses unittest's result
+API, checks each required module and requires all selected cases to complete.
+
+| Correction | Evidence before the fix | Result and retained scope |
+| :-- | :-- | :-- |
+| ZIP member identity | Two actual independent assertions failed before correction | `43f716d` rejects ambiguous or non-regular binary members. Both original assertions remain in the complete GREEN suite. |
+| Required module import | One independent assertion observed premature CLI success before later required evidence | `5addc49` rejects module termination during import. The unchanged assertion passes; removing that guard was killed by the relevant assertion against the frozen eight controls. |
+| Required unittest selection | A separate independent assertion observed premature CLI success during selection | `b57f5f1` rejects termination at the authoritative main boundary. The unchanged assertion passes; removing only that guard was killed by the relevant assertion against the frozen nine controls. |
+
+The [independent admission report](../verification/SYN-341-admission-independent.md)
+keeps its original 36-case, intermediate 38-case and final 39-case synthetic
+fixtures separate from the actual complete 39-method suite. Synthetic modules
+test admission thresholds; they do not establish publication behavior.
+
+The [independent core report](../verification/SYN-341-independent/README.md)
+preserves the original 25-mutant campaign: 13 assertion kills, nine survivors and
+three invalid attempts. All 12 strengthened follow-up variants were killed by
+relevant assertions. Eleven reuse the original patches byte for byte; the ZIP
+metadata variant was explicitly adapted to the corrected guard. Three further
+corrective ZIP guard removals were also killed by assertions. The restored core
+suite passed all 30 methods in 17.985 seconds with no errors or skips. Its source,
+tests and execution remain a separate frozen round from the integrated 39-method
+gate. Invalid attempts are not assertion kills, and original survivors are not
+retroactively reclassified.
+
+The core report also records metadata-free real local tar compatibility and
+representative ZIP fixtures. Actual Windows archive production was not exercised.
+That producer precondition and its separate source-side correction are not
+silently counted as downstream consumer assertion evidence.
+
+All these publication tests execute the actual helper and workflow steps with
+private temporary assets and recording `gh`, `cosign` and `npm` fakes. They test
+arguments, ordering, byte selection and failure boundaries. They do not establish
+real cryptography, a Rust platform build, registry credentials or actual npm
+publication. Exact final-head hosted CI and actual publication after the existing
+review gates remain separate evidence.
+
+Follow the [Febasi test-first skill](https://github.com/romulofebasi/febasi-standards/blob/main/skills/test-first/SKILL.md),
+including observable assertion RED, restored complete GREEN and independent
+challenges. Preserve original survivors and invalid attempts before strengthening
+tests. Keep raw logs private; publish reviewed counts, digests and explicit limits.

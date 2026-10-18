@@ -1,0 +1,143 @@
+{
+  "schema": "synapse.npm-integration-follow-up/1",
+  "source": "b57f5f192567d6ec85db5e5e0322cfb485d10e55",
+  "documentationBase": "0c4257120c47f0cfb33042308a77fc9467b0fcda",
+  "status": "LOCAL_INTEGRATION_AND_INDEPENDENT_REVIEWS_COMPLETE; HOSTED_CI_AND_PUBLICATION_PENDING",
+  "historicalReceipt": {
+    "path": "SYN-341-authenticated-npm-publication.json",
+    "source": "f142eb5a5f22442020a84fa5929eee2fe7954881",
+    "authorMethods": 16,
+    "retainedUnchanged": true,
+    "sha256": "bf068803e2379532da34eafdc51d0893b947c60d26c6b224eee87fd7f38c2d80",
+    "scope": "Historical initial evidence and then-pending gates, not the current integration verdict."
+  },
+  "sourceSHA256": {
+    "scripts/publish-npm.py": "4acf471b3e3776660742aa97a4f51caef3506941dd12e2bc8901eac4d2d3d7f7",
+    "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738",
+    "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4",
+    "scripts/check-distribution.py": "32a5e29ab988f188a36b3983ca03abe9fd9f15d87547e512e2d1f0486f49c082",
+    "scripts/check-distribution-gate-tests.py": "3b05ad5564b458154edab3955898c9490f0b224c33af3b9df7b942aa8ba95852",
+    ".github/workflows/npm-publish.yml": "b0c8c9aecc56a6cf103838db2f748a32b9cc65385e14071381a1dfd877f7023e",
+    ".github/workflows/ci.yml": "c31a64cd9cb0b27f88da9084709c5a42f693fe67e3291c9b30607cd4d6e98007"
+  },
+  "actualFullSuite": {
+    "source": "b57f5f192567d6ec85db5e5e0322cfb485d10e55",
+    "command": "python3 scripts/check-distribution.py",
+    "methods": 39,
+    "authorMethods": 16,
+    "independentCoreMethods": 14,
+    "admissionControls": 9,
+    "root": {
+      "exitCode": 0,
+      "durationSeconds": 20.399,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "expectedFailures": 0,
+      "privateLogLabel": "root-final-thirty-nine",
+      "privateLogSHA256": "9c5137812cd17be8e95303d9323d4076eca27e2ff388020250dcbe5f5f3ef594"
+    },
+    "independent": {
+      "command": "python3 scripts/check-distribution.py",
+      "methods": 39,
+      "authorMethods": 16,
+      "independentMethods": 14,
+      "admissionMethods": 9,
+      "durationSeconds": 22.105,
+      "exitCode": 0,
+      "assertionFailures": 0,
+      "errors": 0,
+      "skips": 0,
+      "expectedFailures": 0,
+      "rawLogSHA256": "46d861005ff46c6544b76df29d63065559fd21a4ffdad77e7a6b42094658eada",
+      "privateLogLabel": "independent-actual-full39"
+    },
+    "reexecutionForThisDocumentationChange": "Not performed; production and test bytes are unchanged."
+  },
+  "zipCorrection": {
+    "fixCommit": "43f716d4b5ea9081e6e9a9cdf5f358dd33d4021f",
+    "pristineMethods": 2,
+    "pristineAssertionFailures": 2,
+    "pristineErrors": 0,
+    "originalRegressionMethodsPreserved": true,
+    "rootPrivateREDLogLabel": "root-zip-identity-red",
+    "rootPrivateREDLogSHA256": "89fc6400c0cf813e637cb09e8c94e64ef042a43721d1517b84411053aa53d1c4",
+    "rootPrivateRestoredLogLabel": "root-zip-identity-green",
+    "rootPrivateRestoredLogSHA256": "bf5490deb3bf1ebd08095ed328b0b941ab84aa0b55c976981acc08b9efde443f",
+    "restoredScopeNote": "The earlier restored ZIP run is separate from the later integrated 39-method suite."
+  },
+  "admissionCorrections": {
+    "report": "SYN-341-admission-independent.md",
+    "receipt": "SYN-341-admission-independent.json",
+    "receiptSHA256": "563a919f00677a66d6f88bc5d13a248287a6aab33358cd4001a0957c5afb9d5a",
+    "importFixCommit": "5addc49fa7092718ee9556db05952af74b61a1f7",
+    "selectionFixCommit": "b57f5f192567d6ec85db5e5e0322cfb485d10e55",
+    "separatePristineAssertionRegressions": 2,
+    "eachOriginalAssertionPassedUnchangedAfterCorrection": true,
+    "targetedGuardRemovals": 2,
+    "assertionKillsPerTargetedRound": 1,
+    "errorsPerTargetedRound": 0,
+    "originalSyntheticRoundsRetainedSeparately": [
+      36,
+      38,
+      39
+    ]
+  },
+  "coreIndependentReview": {
+    "frozenReportCommit": "b7aab17faa0247ea96fe57ff101f2d811f64ffad",
+    "reportPath": "SYN-341-independent/README.md",
+    "evidencePath": "SYN-341-independent/evidence.json",
+    "evidenceSHA256": "7107b59fdb3f78d3c37d403e59e5de8faa01c65b2000fb1b9e86b445c8143834",
+    "originalSource": "f142eb5a5f22442020a84fa5929eee2fe7954881",
+    "correctiveHelperSource": "43f716d4b5ea9081e6e9a9cdf5f358dd33d4021f",
+    "correctedHelperSHA256": "4acf471b3e3776660742aa97a4f51caef3506941dd12e2bc8901eac4d2d3d7f7",
+    "originalRound": {
+      "variants": 25,
+      "assertionKills": 13,
+      "survivors": 9,
+      "invalid": 3
+    },
+    "strengthenedOriginalGaps": {
+      "variants": 12,
+      "assertionKills": 12,
+      "byteIdenticalOriginalPatches": 11,
+      "explicitlyAdaptedZIPMetadataVariant": 1,
+      "survivors": 0,
+      "invalid": 0
+    },
+    "correctiveZIPGuardRemovals": {
+      "variants": 3,
+      "assertionKills": 3,
+      "survivors": 0,
+      "invalid": 0
+    },
+    "restoredCore": {
+      "methods": 30,
+      "authorMethods": 16,
+      "independentMethods": 14,
+      "durationSeconds": 17.985,
+      "exitCode": 0,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "integrationStatus": "Frozen report complete; root integrates it in a separate report-only commit after this documentation reconciliation.",
+    "limits": [
+      "Actual metadata-free local tar compatibility was exercised.",
+      "Representative ZIP fixtures do not establish actual Windows 7z production.",
+      "Producer precondition and separate source-side correction are distinct from downstream consumer assertion evidence."
+    ]
+  },
+  "pending": [
+    "Run hosted CI on the exact final public head.",
+    "Actual tagged platform build, genuine signature verification and npm publication after the existing review gates."
+  ],
+  "limits": [
+    "Publication suites use recording gh, cosign and npm fakes.",
+    "No genuine cryptography, registry authentication or remote publication is established here.",
+    "Local unittest admission is not an arbitrary-test-code sandbox or an unsupported structured-adapter claim.",
+    "Existing v1.4 assets lack the new receipt and cannot rerun the hardened path unchanged.",
+    "Convenience installer remains unchanged and best-effort."
+  ],
+  "privacy": "Raw logs and private artifact locations remain private. Logical private-log labels and SHA256 digests are allowlisted references, not download links."
+}
