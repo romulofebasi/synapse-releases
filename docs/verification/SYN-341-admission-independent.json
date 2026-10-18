@@ -1,0 +1,109 @@
+{
+  "schema": "synapse.distribution-admission-independent/1",
+  "source": "b57f5f192567d6ec85db5e5e0322cfb485d10e55",
+  "verdict": "ACCEPTED_WITHIN_REVIEWED_ADMISSION_SCOPE",
+  "sourceSHA256": {
+    ".github/workflows/ci.yml": "c31a64cd9cb0b27f88da9084709c5a42f693fe67e3291c9b30607cd4d6e98007",
+    "scripts/check-distribution-gate-tests.py": "3b05ad5564b458154edab3955898c9490f0b224c33af3b9df7b942aa8ba95852",
+    "scripts/check-distribution.py": "32a5e29ab988f188a36b3983ca03abe9fd9f15d87547e512e2d1f0486f49c082",
+    "scripts/check-npm-independent-tests.py": "957bd373da864f67a04fd87e296060fe895d50acf241b0ba8ffabd31e09fc5c4",
+    "scripts/check-npm-publish-tests.py": "245bbbfcc6256b932ae7e90be9e134664ae673bce1377cbe710edd333c0cb738"
+  },
+  "rounds": [
+    {
+      "source": "60204306845793aa15285624ee08a7fe04255b21",
+      "publicControlsPassed": 7,
+      "syntheticFixtureMethods": 36,
+      "pristineIndependentAssertionFailures": 1,
+      "finding": "Required import termination could exit successfully before all modules were admitted.",
+      "privateFixtureTypes": "Synthetic16 and13 required modules plus actual7 admission controls.",
+      "rawLogSHA256": "fb9137b239e38eb7ece52b6cbf5933d80048fa5df2f7173c67bd2eea82bb0e7e"
+    },
+    {
+      "source": "5addc49fa7092718ee9556db05952af74b61a1f7",
+      "publicControlsPassed": 8,
+      "syntheticFixtureMethods": 38,
+      "originalImportAssertionPassedUnchanged": true,
+      "pristineSelectionAssertionFailures": 1,
+      "finding": "Required unittest selection termination could exit successfully outside the import guard.",
+      "mutation": {
+        "change": "Remove the required import termination guard.",
+        "verdict": "KILLED_ASSERTION",
+        "assertionFailures": 1,
+        "errors": 0,
+        "restoredControlsPassed": 8,
+        "testsSHA256BeforeAndAfter": "8b8c155c83b31c0c7ad5d88476d0c23c7b7bbed3141be2e7034c515cd49de563",
+        "privatePatchSHA256": "21539f2280dc3760c389575bac045d6a6bf9411b6e4822cba25d661f352d0bb7",
+        "privateLogSHA256": "0fb05a54a0b1b0842f37c6f629f3d21e6b088fcdae0c3f5fca26d3cfd7ce304f"
+      },
+      "privateSelectionREDLogSHA256": "7c269fc8534c633195afb237996d1d8fcb96ff9367925e9adcb8ff3a92cdafa4"
+    },
+    {
+      "source": "b57f5f192567d6ec85db5e5e0322cfb485d10e55",
+      "publicControlsPassed": 9,
+      "syntheticFixtureMethods": 39,
+      "originalSelectionAssertionPassedUnchanged": true,
+      "mutation": {
+        "source": "b57f5f192567d6ec85db5e5e0322cfb485d10e55",
+        "productionChange": "Remove only main boundary SystemExit catch; retain import boundary catch.",
+        "testsSHA256Before": "3b05ad5564b458154edab3955898c9490f0b224c33af3b9df7b942aa8ba95852",
+        "testsSHA256After": "3b05ad5564b458154edab3955898c9490f0b224c33af3b9df7b942aa8ba95852",
+        "verdict": "KILLED_ASSERTION",
+        "failures": 1,
+        "errors": 0,
+        "survivors": 0,
+        "invalid": 0,
+        "restoredPublicMethods": 9,
+        "restoredFailures": 0,
+        "privatePatchSHA256": "bbff5b5406a93d9b9dcc5695acb425f7c86cbb5508fdacac55f991e674dc9b6a",
+        "privateLogSHA256": "bc66fe00bec2e33dd3cacebc9e3ff49b540db2844a072f3922eb414cbe9514f0"
+      }
+    }
+  ],
+  "independentActualFullSuite": {
+    "command": "python3 scripts/check-distribution.py",
+    "methods": 39,
+    "authorMethods": 16,
+    "independentMethods": 14,
+    "admissionMethods": 9,
+    "durationSeconds": 22.105,
+    "exitCode": 0,
+    "assertionFailures": 0,
+    "errors": 0,
+    "skips": 0,
+    "expectedFailures": 0,
+    "rawLogSHA256": "46d861005ff46c6544b76df29d63065559fd21a4ffdad77e7a6b42094658eada"
+  },
+  "negativeControls": [
+    "Missing required module",
+    "Empty required module",
+    "Insufficient per-module cases",
+    "Skipped required test",
+    "Expected failure",
+    "Assertion failure",
+    "Runner error",
+    "Import error",
+    "Success-like console text accompanying assertion failure",
+    "Premature required import termination",
+    "Premature unittest selection termination"
+  ],
+  "finalPrivateEvidenceSHA256": {
+    "unchangedSelectionRegression": "1cb1dd4e06be6ec82ff1d05f7141b92a6e59551ad8d8083ae22455bbf61a7439",
+    "publicNineGREEN": "df29a10509040fff93210eaaf90330c9ce10ae0eca87eed5239b3119b10901d2",
+    "restoredPublicNineGREEN": "9b3b2899e5b0fd66be964718494a81584c002f3aa988bb3339e65e0e1e06e498",
+    "synthetic39FixtureGREEN": "9ffb427230568a8b78ed88711a86b13cacc9d1b3944aaff053e0436d3b48493b"
+  },
+  "pending": [
+    "Exact final-head hosted CI",
+    "Separately authorized real release and npm publication evidence"
+  ],
+  "limits": [
+    "Review is restricted to strict Python CI admission.",
+    "This uses unittest result admission, with no separate structured adapter claim.",
+    "Synthetic36,38 and39-case fixtures remain distinct from actual publication suites.",
+    "Recording gh, cosign and npm fakes do not establish genuine cryptography, platform builds or registry publication.",
+    "Gate is not an arbitrary-test-code sandbox.",
+    "Convenience installer remains unchanged and best-effort."
+  ],
+  "privacy": "Raw logs, original fixture inputs and temporary filesystem paths remain private."
+}
