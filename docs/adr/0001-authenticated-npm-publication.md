@@ -66,6 +66,14 @@ explains identity and issuer checks. The pinned tag and exact identity above are
 the publication policy, separate from the wider tag-family example in the manual
 download guide.
 
+## Alternatives considered
+
+| Option | Decision and tradeoff |
+| :-- | :-- |
+| Publish npm packages from the private product build | Keep the existing public OIDC publisher and provenance boundary. The source workflow signs exact release inputs; the public worker authenticates and repackages them without a private build checkout. |
+| General archive extraction with a safe extraction filter | Select only each exact regular binary through an open archive reader. This avoids writing unrelated members and keeps accepted layouts explicit across tar and ZIP producers. |
+| Validate one platform immediately before publishing it | Validate all four platforms and classify all five registry versions first. This catches known incomplete input or registry failures before any publish, while individual later publish failures can still leave a partial release. |
+
 ## Failure, retry and historical assets
 
 A failed input, signature, archive or registry-classification gate prevents
