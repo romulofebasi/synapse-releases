@@ -3,6 +3,9 @@
 import importlib.util
 import io
 from pathlib import Path
+import shutil
+import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -60,6 +63,21 @@ class DistributionAdmissionTests(unittest.TestCase):
             (root / name).write_text('import unittest\nclass Case(unittest.TestCase):\n def test_one(self): pass\n')
             with self.assertRaisesRegex(ValueError, 'fewer than its admitted cases'):
                 gate.load_required(root, names=(name,))
+
+    def run_fixture(self, kind):
+        self.assertEqual(kind, 'imported-unittest-runner')
+        with tempfile.TemporaryDirectory(prefix='distribution-import-boundary-') as temporary:
+            root = Path(temporary)
+            shutil.copyfile(Path(__file__).with_name('check-distribution.py'), root / 'check-distribution.py')
+            methods = ''.join(f' def test_{index:02d}(self): pass\n' for index in range(16))
+            (root / 'check-npm-publish-tests.py').write_text(
+                'import unittest\nclass Evidence(unittest.TestCase):\n' + methods + '\nunittest.main(module=__name__)\n')
+            return subprocess.run([sys.executable, str(root / 'check-distribution.py')],
+                                  capture_output=True, text=True, timeout=15)
+
+    def test_imported_unittest_runner_cannot_bypass_missing_later_required_module(self):
+        self.assertNotEqual(self.run_fixture('imported-unittest-runner').returncode, 0,
+                            'A required module exiting successfully during import must not admit missing independent evidence')
 
 
 if __name__ == '__main__':

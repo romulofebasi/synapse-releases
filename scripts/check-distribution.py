@@ -6,8 +6,8 @@ import sys
 import unittest
 
 REQUIRED_MODULES = ('check-npm-publish-tests.py', 'check-npm-independent-tests.py', 'check-distribution-gate-tests.py')
-MINIMUM_MODULE_CASES = {'check-npm-publish-tests.py': 16, 'check-npm-independent-tests.py': 13,
-                        'check-distribution-gate-tests.py': 7}
+MINIMUM_MODULE_CASES = {'check-npm-publish-tests.py': 16, 'check-npm-independent-tests.py': 14,
+                        'check-distribution-gate-tests.py': 8}
 MINIMUM_CASES = 16
 
 
@@ -21,7 +21,10 @@ def load_required(directory, names=REQUIRED_MODULES):
         spec = importlib.util.spec_from_file_location(f'distribution_required_{index}', path)
         module = importlib.util.module_from_spec(spec)
         sys.modules[spec.name] = module
-        spec.loader.exec_module(module)
+        try:
+            spec.loader.exec_module(module)
+        except SystemExit as error:
+            raise ValueError('Required module terminated during import') from error
         selected = unittest.defaultTestLoader.loadTestsFromModule(module)
         if selected.countTestCases() == 0:
             raise ValueError('Required module selected no cases')
